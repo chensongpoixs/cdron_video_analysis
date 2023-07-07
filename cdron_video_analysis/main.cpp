@@ -7,7 +7,63 @@
 #include <opencv2/cudacodec.hpp>
 #include "detector.h"
 #include "cxxopts.h"
+#include "clicense_plate.h"
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+//opencv
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
+/******************************************************************************************
+Function:       Screenshot
+Description:    矩形截图
+Input:          src:原图片  rect:截图范围
+Output:         dst:截图后的图片
+Return:         截图成功返回true,失败返回false
+*******************************************************************************************/
+//bool Screenshot(cv::Mat* src, cv::Mat* dst, CvRect rect)
+//{
+//	try {
+//		cvSetImageROI(src, rect);
+//		cvCopy(src, dst, 0);
+//		cvResetImageROI(src);
+//		return true;
+//	}
+//
+//	catch (cv::Exception e)
+//	{
+//	}
+//}
+//
+///******************************************************************************************
+//Function:       SafeResetSizeOfRect
+//Description:    安全重置矩形大小
+//Input:          src:原图片 rect:截图范围
+//Return:         无
+//*******************************************************************************************/
+//void SafeResetSizeOfRect(cv::Mat* src, CvRect& rect)
+//{
+//	try
+//	{
+//		rect.x = rect.x < 0 ? 0 : rect.x;
+//		rect.y = rect.y < 0 ? 0 : rect.y;
+//		rect.width = rect.width < 0 ? 0 : rect.width;
+//		rect.height = rect.height < 0 ? 0 : rect.height;
+//
+//		if (rect.x > src->width || rect.y > src->height)
+//		{
+//			rect = cvRect(0, 0, src->width, src->height);
+//		}
+//		rect.width = std::min(rect.width, src->width - rect.x);
+//		rect.height = std::min(rect.height, src->height - rect.y);
+//	}
+//
+//	catch (cv::Exception e)
+//	{
+//	}
+//}
 
 std::vector<std::string> LoadNames(const std::string& path) {
     // load class names
@@ -39,6 +95,22 @@ void Demo(cv::Mat& img,
 		{
 			for (const auto& detection : p)
 			{
+				//# #  3：汽车
+				//# #  4:面包车
+				//# #  5:卡车
+				//# #  6:三轮车
+				//# #  7：遮阳篷三轮车
+				//# #  8：公交车
+				if (detection.class_idx == 2 || detection.class_idx == 3 || detection.class_idx == 4 || detection.class_idx == 7)
+				{
+					cv::Mat plate_img = img(detection.bbox);
+					//cv::imshow("plate_img", plate_img);
+					//cv::imwrite("test.jpg", img);
+					//cv::waitKey(1);
+					chen::g_license_plate.recognition(plate_img);
+					//cvReleaseImage
+					
+				}
 				const auto& box = detection.bbox;
 				float score = detection.score;
 				int class_idx = detection.class_idx;
@@ -72,7 +144,7 @@ void Demo(cv::Mat& img,
 }
 
 
-int test_main(int argc, const char* argv[])
+int main(int argc, const char* argv[])
 {
     cxxopts::Options parser(argv[0], "A LibTorch inference implementation of the yolov5");
 
@@ -84,6 +156,7 @@ int test_main(int argc, const char* argv[])
             ("iou-thres", "IOU threshold for NMS", cxxopts::value<float>()->default_value("0.5"))
             ("gpu", "Enable cuda device or cpu", cxxopts::value<bool>()->default_value("false"))
             ("view-img", "display results", cxxopts::value<bool>()->default_value("false"))
+			("model", "model path", cxxopts::value<std::string>())
             ("h,help", "Print usage");
 
     auto opt = parser.parse(argc, argv);
@@ -111,12 +184,16 @@ int test_main(int argc, const char* argv[])
         return -1;
     }
 
+
+
     // load network
     std::string weights = opt["weights"].as<std::string>();
     auto detector = Detector(weights, device_type);
 
     // load input image
     std::string source = opt["source"].as<std::string>();
+	std::string modes_path = opt["model"].as<std::string>();
+	chen::g_license_plate.init(modes_path.c_str());
 	/////////////////////////////////////////////////////////////////////////////////
     //cv::Mat img = cv::imread(source);
 	cv::VideoCapture video_capture =  cv::VideoCapture();
@@ -185,12 +262,17 @@ int test_main(int argc, const char* argv[])
 				detector.Run(temp_img, 1.0f, 1.0f);
 				one = false;
 			}
+			auto start = std::chrono::high_resolution_clock::now();
 			//if (frame_count > 5)
 			{
 				result = detector.Run(img, conf_thres, iou_thres);
 				frame_count = 0;
 			}
-			Demo(img, result, class_names);
+			Demo(img, result, class_names, true);
+			auto  end = std::chrono::high_resolution_clock::now();
+			auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+			// It should be known that it takes longer time at first time
+			std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
 			//cv::resizeWindow("cdron_video_analysis", 800, 600);
 			cv::imshow("cdron_video_analysis", img);
 			//cv::imwrite("test.jpg", img);
@@ -210,7 +292,7 @@ int test_main(int argc, const char* argv[])
 
 static const std::vector<std::string> TYPES = { "蓝牌", "黄牌单层", "白牌单层", "绿牌新能源", "黑牌港澳", "香港单层", "香港双层", "澳门单层", "澳门双层", "黄牌双层" };
 
-int main(int argc, char **argv) {
+int test_main(int argc, char **argv) {
 	char *model_path = argv[1];
 	char *image_path = argv[2];
 	cv::Mat image = cv::imread(image_path);

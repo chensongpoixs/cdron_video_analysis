@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="clicense_plate.h" />
     <ClInclude Include="cxxopts.h" />
     <ClInclude Include="detector.h" />
     <ClInclude Include="HyperLPR\basic_types.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="clicense_plate.cpp" />
     <ClCompile Include="detector.cpp" />
     <ClCompile Include="HyperLPR\buffer_module\camera_buffer.cpp" />
     <ClCompile Include="HyperLPR\context_module\hyper_lpr_context.cpp" />

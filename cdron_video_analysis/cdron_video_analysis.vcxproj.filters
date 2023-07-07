@@ -156,6 +156,9 @@
     <ClInclude Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.h">
       <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
     </ClInclude>
+    <ClInclude Include="clicense_plate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.cpp">
       <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClCompile>
+    <ClCompile Include="clicense_plate.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
