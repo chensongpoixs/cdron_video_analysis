@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="HyperLPR">
+      <UniqueIdentifier>{23aa12a3-c019-46ed-b475-d83034af1c81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\buffer_module">
+      <UniqueIdentifier>{2c3620f3-8165-4cfe-91c6-fb1bfdb72394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\c_api">
+      <UniqueIdentifier>{3f1b62dd-eb3f-41fd-8eab-97054c3edeaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\context_module">
+      <UniqueIdentifier>{d4b0479e-4443-409f-a36b-62db8171191e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\inference_helper_module">
+      <UniqueIdentifier>{8678ad9f-5718-43fd-a6a2-839fadd56a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\nn_implementation_module">
+      <UniqueIdentifier>{58a39352-9502-4a72-b980-fde10205b017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\nn_module">
+      <UniqueIdentifier>{9713cbba-1e60-4a92-95f9-9cbd72fca981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\nn_implementation_module\classification">
+      <UniqueIdentifier>{c14f801b-f9af-4f2c-9a16-e81b710b0215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\nn_implementation_module\detect">
+      <UniqueIdentifier>{a7d5c37c-923b-47c5-a305-c85047c4fe04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HyperLPR\nn_implementation_module\recognition">
+      <UniqueIdentifier>{e568caed-dedd-49f6-8510-f49066ba01e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cxxopts.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="detector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\basic_types.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\configuration.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\doc.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\log.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\utils.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\version.h">
+      <Filter>HyperLPR</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\buffer_module\all.h">
+      <Filter>HyperLPR\buffer_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\buffer_module\camera_buffer.h">
+      <Filter>HyperLPR\buffer_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\c_api\hyper_lpr_sdk.h">
+      <Filter>HyperLPR\c_api</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\c_api\hyper_lpr_sdk_internal.h">
+      <Filter>HyperLPR\c_api</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\context_module\all.h">
+      <Filter>HyperLPR\context_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\context_module\hyper_lpr_common.h">
+      <Filter>HyperLPR\context_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\context_module\hyper_lpr_context.h">
+      <Filter>HyperLPR\context_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\inference_helper_module\inference_helper.h">
+      <Filter>HyperLPR\inference_helper_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\inference_helper_module\inference_helper_log.h">
+      <Filter>HyperLPR\inference_helper_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\inference_helper_module\inference_helper_mnn.h">
+      <Filter>HyperLPR\inference_helper_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\all.h">
+      <Filter>HyperLPR\nn_implementation_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_module\all.h">
+      <Filter>HyperLPR\nn_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_module\mnn_adapter.h">
+      <Filter>HyperLPR\nn_module</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\classification\all.h">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\classification\classification_engine.h">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\classification\plate_classification.h">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\classification\plate_cls_common.h">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\all.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\det_arch.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\det_backbone.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\det_header.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\plate_det_common.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\detect\plate_detector.h">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\recognition\all.h">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\recognition\plate_recognition.h">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\recognition\plate_recognition_tokenize.h">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\recognition\recognition_commom.h">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.h">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="detector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\buffer_module\camera_buffer.cpp">
+      <Filter>HyperLPR\buffer_module</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\c_api\hyper_lpr_sdk.cc">
+      <Filter>HyperLPR\c_api</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\context_module\hyper_lpr_context.cpp">
+      <Filter>HyperLPR\context_module</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\inference_helper_module\inference_helper.cpp">
+      <Filter>HyperLPR\inference_helper_module</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\inference_helper_module\inference_helper_mnn.cpp">
+      <Filter>HyperLPR\inference_helper_module</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_module\mnn_adapter.cpp">
+      <Filter>HyperLPR\nn_module</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\classification\classification_engine.cpp">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\classification\plate_classification.cpp">
+      <Filter>HyperLPR\nn_implementation_module\classification</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\detect\det_arch.cpp">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\detect\det_backbone.cpp">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\detect\det_header.cpp">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\detect\plate_detector.cpp">
+      <Filter>HyperLPR\nn_implementation_module\detect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\recognition\plate_recognition.cpp">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClCompile>
+    <ClCompile Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.cpp">
+      <Filter>HyperLPR\nn_implementation_module\recognition</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+/libtorch
+/build
+/.vs
+/cdron_video_analysis/.vs
+/vsout
+/bin
