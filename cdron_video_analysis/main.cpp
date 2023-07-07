@@ -116,11 +116,11 @@ void Demo(cv::Mat& img,
 				int class_idx = detection.class_idx;
 
 				cv::rectangle(img, box, cv::Scalar(0, 0, 255), 2);
-
+				//cv::inRange();
 				if (label) {
 					std::stringstream ss;
 					ss << std::fixed << std::setprecision(2) << score;
-					std::string s = class_names[class_idx] + " " + ss.str();
+					std::string s = class_names[class_idx>0 ? class_idx-1: class_idx] + " " + ss.str();
 
 					auto font_face = cv::FONT_HERSHEY_DUPLEX;
 					auto font_scale = 1.0;
@@ -144,7 +144,7 @@ void Demo(cv::Mat& img,
 }
 
 
-int main(int argc, const char* argv[])
+int deci_main(int argc, const char* argv[])
 {
     cxxopts::Options parser(argv[0], "A LibTorch inference implementation of the yolov5");
 

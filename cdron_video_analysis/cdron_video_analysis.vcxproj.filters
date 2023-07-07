@@ -43,6 +43,9 @@
     <Filter Include="HyperLPR\nn_implementation_module\recognition">
       <UniqueIdentifier>{e568caed-dedd-49f6-8510-f49066ba01e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cuda">
+      <UniqueIdentifier>{28e0a4cd-62b3-4cae-acfc-f158da09a73d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="clicense_plate.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cgpu_detector.h">
+      <Filter>cuda</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -211,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="clicense_plate.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cgpu_detector.cpp">
+      <Filter>cuda</Filter>
+    </ClCompile>
+    <ClCompile Include="test_gpu.cpp">
+      <Filter>cuda</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

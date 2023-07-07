@@ -78,11 +78,11 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
     /*** Post-process ***/
 
    // start = std::chrono::high_resolution_clock::now();
-    auto detections = output.toTuple()->elements()[0].toTensor();
+	const at::Tensor& detections = output.toTuple()->elements()[0].toTensor();
 
     // result: n * 7
     // batch index(0), top-left x/y (1,2), bottom-right x/y (3,4), score(5), class id(6)
-    auto result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
+	std::vector<std::vector<Detection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
 
 	auto  end = std::chrono::high_resolution_clock::now();
 	auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

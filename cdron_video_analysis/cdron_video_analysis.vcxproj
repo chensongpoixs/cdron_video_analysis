@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="cgpu_detector.h" />
     <ClInclude Include="clicense_plate.h" />
     <ClInclude Include="cxxopts.h" />
     <ClInclude Include="detector.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cgpu_detector.cpp" />
     <ClCompile Include="clicense_plate.cpp" />
     <ClCompile Include="detector.cpp" />
     <ClCompile Include="HyperLPR\buffer_module\camera_buffer.cpp" />
@@ -203,6 +205,7 @@
     <ClCompile Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.cpp" />
     <ClCompile Include="HyperLPR\nn_module\mnn_adapter.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test_gpu.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
