@@ -46,6 +46,24 @@
     <Filter Include="cuda">
       <UniqueIdentifier>{28e0a4cd-62b3-4cae-acfc-f158da09a73d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mqtt">
+      <UniqueIdentifier>{46156fad-b455-4e3f-84d1-dd90175f6aa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="clib">
+      <UniqueIdentifier>{b8694e8c-e0f2-42f5-bf62-106923d61495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cfg">
+      <UniqueIdentifier>{454002fb-420d-4887-96cd-1afaae81e70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="server">
+      <UniqueIdentifier>{f99dd211-6c55-4689-a698-bc9deae832d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yolov_dnn">
+      <UniqueIdentifier>{f7391dde-c4ef-4435-b258-749344e9de58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="video_analysis">
+      <UniqueIdentifier>{9a4bbbf9-2eb4-4f78-ac76-3746e815a257}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -165,6 +183,96 @@
     <ClInclude Include="cgpu_detector.h">
       <Filter>cuda</Filter>
     </ClInclude>
+    <ClInclude Include="cmqtt_mgr.h">
+      <Filter>mqtt</Filter>
+    </ClInclude>
+    <ClInclude Include="casync_log.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="ccmd_param.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cconfig.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cdigit2str.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="clib_util.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="clog.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="clog_color.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="clog_define.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cmem_pool.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cmsg_buffer.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_define.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_mgr.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_msg.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_msg_header.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_msg_queue.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_msg_reserve.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_session.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_type.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="cnoncopyable.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="crandom.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="csingleton.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_api.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_const.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_elapse.h">
+      <Filter>clib</Filter>
+    </ClInclude>
+    <ClInclude Include="ccfg.h">
+      <Filter>cfg</Filter>
+    </ClInclude>
+    <ClInclude Include="cdron_video_analysls.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="cyolov_dnn.h">
+      <Filter>yolov_dnn</Filter>
+    </ClInclude>
+    <ClInclude Include="cvideo_analysis.h">
+      <Filter>video_analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="cvideo_analysis_mgr.h">
+      <Filter>video_analysis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -223,6 +331,75 @@
     </ClCompile>
     <ClCompile Include="test_gpu.cpp">
       <Filter>cuda</Filter>
+    </ClCompile>
+    <ClCompile Include="cmqtt_mgr.cpp">
+      <Filter>mqtt</Filter>
+    </ClCompile>
+    <ClCompile Include="test_mqtt.cpp">
+      <Filter>mqtt</Filter>
+    </ClCompile>
+    <ClCompile Include="casync_log.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="ccmd_param.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cconfig.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cdigit2str.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="clog.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="clog_color.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cmem_pool.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cmsg_buffer.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_mgr.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_msg.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_msg_queue.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_msg_reserve.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_session.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_type.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="crandom.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="ctime_api.cpp">
+      <Filter>clib</Filter>
+    </ClCompile>
+    <ClCompile Include="ccfg.cpp">
+      <Filter>cfg</Filter>
+    </ClCompile>
+    <ClCompile Include="cdron_video_analysls.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="cyolov_dnn.cpp">
+      <Filter>yolov_dnn</Filter>
+    </ClCompile>
+    <ClCompile Include="cvideo_analysis.cpp">
+      <Filter>video_analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="cvideo_analysis_mgr.cpp">
+      <Filter>video_analysis</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <memory>
 #include <chrono>
 #include <opencv2/opencv.hpp>
@@ -15,13 +15,14 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include <json/json.h>
 
 /******************************************************************************************
 Function:       Screenshot
-Description:    ¾ØĞÎ½ØÍ¼
-Input:          src:Ô­Í¼Æ¬  rect:½ØÍ¼·¶Î§
-Output:         dst:½ØÍ¼ºóµÄÍ¼Æ¬
-Return:         ½ØÍ¼³É¹¦·µ»Øtrue,Ê§°Ü·µ»Øfalse
+Description:    çŸ©å½¢æˆªå›¾
+Input:          src:åŸå›¾ç‰‡  rect:æˆªå›¾èŒƒå›´
+Output:         dst:æˆªå›¾åçš„å›¾ç‰‡
+Return:         æˆªå›¾æˆåŠŸè¿”å›true,å¤±è´¥è¿”å›false
 *******************************************************************************************/
 //bool Screenshot(cv::Mat* src, cv::Mat* dst, CvRect rect)
 //{
@@ -39,9 +40,9 @@ Return:         ½ØÍ¼³É¹¦·µ»Øtrue,Ê§°Ü·µ»Øfalse
 //
 ///******************************************************************************************
 //Function:       SafeResetSizeOfRect
-//Description:    °²È«ÖØÖÃ¾ØĞÎ´óĞ¡
-//Input:          src:Ô­Í¼Æ¬ rect:½ØÍ¼·¶Î§
-//Return:         ÎŞ
+//Description:    å®‰å…¨é‡ç½®çŸ©å½¢å¤§å°
+//Input:          src:åŸå›¾ç‰‡ rect:æˆªå›¾èŒƒå›´
+//Return:         æ— 
 //*******************************************************************************************/
 //void SafeResetSizeOfRect(cv::Mat* src, CvRect& rect)
 //{
@@ -91,16 +92,19 @@ void Demo(cv::Mat& img,
 
     if (!detections.empty()) 
 	{
+		//Json::Value data;
+		Json::Value arrayObj;
+		Json::Value item;
 		for (const std::vector<Detection> & p : detections)
 		{
 			for (const auto& detection : p)
 			{
-				//# #  3£ºÆû³µ
-				//# #  4:Ãæ°ü³µ
-				//# #  5:¿¨³µ
-				//# #  6:ÈıÂÖ³µ
-				//# #  7£ºÕÚÑôÅñÈıÂÖ³µ
-				//# #  8£º¹«½»³µ
+				//# #  3ï¼šæ±½è½¦
+				//# #  4:é¢åŒ…è½¦
+				//# #  5:å¡è½¦
+				//# #  6:ä¸‰è½®è½¦
+				//# #  7ï¼šé®é˜³ç¯·ä¸‰è½®è½¦
+				//# #  8ï¼šå…¬äº¤è½¦
 				if (detection.class_idx == 2 || detection.class_idx == 3 || detection.class_idx == 4 || detection.class_idx == 7)
 				{
 					cv::Mat plate_img = img(detection.bbox);
@@ -114,7 +118,12 @@ void Demo(cv::Mat& img,
 				const auto& box = detection.bbox;
 				float score = detection.score;
 				int class_idx = detection.class_idx;
-
+				item["class"] = class_idx;
+				item["x"] = box.x;
+				item["y"] = box.y;
+				item["width"] = box.width;
+				item["height"] = box.height;
+				arrayObj.append(item);
 				cv::rectangle(img, box, cv::Scalar(0, 0, 255), 2);
 				//cv::inRange();
 				if (label) {
@@ -136,6 +145,9 @@ void Demo(cv::Mat& img,
 				}
 			}
 		}
+
+		//printf("%u\n", __CUDA_ARCH__);
+		printf("json = %s\n", arrayObj.toStyledString().c_str());
     }
 
    
@@ -144,7 +156,7 @@ void Demo(cv::Mat& img,
 }
 
 
-int deci_main(int argc, const char* argv[])
+int pppmain(int argc, const char* argv[])
 {
     cxxopts::Options parser(argv[0], "A LibTorch inference implementation of the yolov5");
 
@@ -241,7 +253,7 @@ int deci_main(int argc, const char* argv[])
 	/////////////////////////////////////////////////////////////////
 	//if (!cv:videoio_registry::hasBackend(CAP_FFMPEG))
 		//throw SkipTestException("FFmpeg backend not found");
-	// ´´½¨CUDA½âÂëÆ÷
+	// åˆ›å»ºCUDAè§£ç å™¨
 	//cv::cuda::setDevice(0);
 	//cv::cuda::GpuMat d_frame;
 	//cv::Ptr<cv::cudacodec::VideoReader> d_reader = cv::cudacodec::createVideoReader(source, params);
@@ -274,9 +286,9 @@ int deci_main(int argc, const char* argv[])
 			// It should be known that it takes longer time at first time
 			std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
 			//cv::resizeWindow("cdron_video_analysis", 800, 600);
-			cv::imshow("cdron_video_analysis", img);
+			//cv::imshow("cdron_video_analysis", img);
 			//cv::imwrite("test.jpg", img);
-			cv::waitKey(1);
+			//cv::waitKey(1);
 		}
 
    }
@@ -290,7 +302,7 @@ int deci_main(int argc, const char* argv[])
 #include "c_api/hyper_lpr_sdk.h"
 #include "opencv2/opencv.hpp"
 
-static const std::vector<std::string> TYPES = { "À¶ÅÆ", "»ÆÅÆµ¥²ã", "°×ÅÆµ¥²ã", "ÂÌÅÆĞÂÄÜÔ´", "ºÚÅÆ¸Û°Ä", "Ïã¸Ûµ¥²ã", "Ïã¸ÛË«²ã", "°ÄÃÅµ¥²ã", "°ÄÃÅË«²ã", "»ÆÅÆË«²ã" };
+static const std::vector<std::string> TYPES = { "è“ç‰Œ", "é»„ç‰Œå•å±‚", "ç™½ç‰Œå•å±‚", "ç»¿ç‰Œæ–°èƒ½æº", "é»‘ç‰Œæ¸¯æ¾³", "é¦™æ¸¯å•å±‚", "é¦™æ¸¯åŒå±‚", "æ¾³é—¨å•å±‚", "æ¾³é—¨åŒå±‚", "é»„ç‰ŒåŒå±‚" };
 
 int test_main(int argc, char **argv) {
 	char *model_path = argv[1];
@@ -334,7 +346,7 @@ int test_main(int argc, char **argv) {
 	for (int i = 0; i < results.plate_size; ++i) {
 		std::string type;
 		if (results.plates[i].type == HLPR_PlateType::PLATE_TYPE_UNKNOWN) {
-			type = "Î´Öª";
+			type = "æœªçŸ¥";
 		}
 		else {
 			type = TYPES[results.plates[i].type];
@@ -358,3 +370,59 @@ int test_main(int argc, char **argv) {
 
 	return 0;
 }
+
+#include "cdron_video_analysls.h"
+#include <csignal>
+void Stop(int i)
+{
+
+	chen::g_cdron_video_analysls.stop();
+}
+
+void RegisterSignal()
+{
+	signal(SIGINT, Stop);
+	signal(SIGTERM, Stop);
+
+}
+
+int main(int argc, char *argv[])
+{
+	RegisterSignal();
+
+	const char* config_filename = "server.cfg";
+	if (argc > 1)
+	{
+		config_filename = argv[1];
+	}
+	const char* log_path = "./log";
+	if (argc > 2)
+	{
+		log_path = argv[2];
+	}
+ 
+
+
+
+	bool init = chen::g_cdron_video_analysls.init(log_path, config_filename);
+
+	if (init)
+	{
+		init = chen::g_cdron_video_analysls.Loop();
+	}
+
+	chen::g_cdron_video_analysls.destroy();
+	if (!init)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
