@@ -16,7 +16,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <json/json.h>
-
+#include "cyolov_onnxruntime.h"
+#include "inference.h"
 /******************************************************************************************
 Function:       Screenshot
 Description:    矩形截图
@@ -86,7 +87,7 @@ std::vector<std::string> LoadNames(const std::string& path) {
 
 
 void Demo(cv::Mat& img,
-        const std::vector<std::vector<Detection>>& detections,
+        const std::vector<std::vector<CDetection>>& detections,
         const std::vector<std::string>& class_names,
         bool label = true) {
 
@@ -95,7 +96,7 @@ void Demo(cv::Mat& img,
 		//Json::Value data;
 		Json::Value arrayObj;
 		Json::Value item;
-		for (const std::vector<Detection> & p : detections)
+		for (const std::vector<CDetection> & p : detections)
 		{
 			for (const auto& detection : p)
 			{
@@ -249,7 +250,7 @@ int pppmain(int argc, const char* argv[])
 	// set up threshold
 	float conf_thres = opt["conf-thres"].as<float>();
 	float iou_thres = opt["iou-thres"].as<float>();
-	std::vector<std::vector<Detection>> result;
+	std::vector<std::vector<CDetection>> result;
 	/////////////////////////////////////////////////////////////////
 	//if (!cv:videoio_registry::hasBackend(CAP_FFMPEG))
 		//throw SkipTestException("FFmpeg backend not found");
@@ -385,9 +386,194 @@ void RegisterSignal()
 	signal(SIGTERM, Stop);
 
 }
+#include <iostream>
+#include <stdio.h>
+#include "inference.h"
+#include <filesystem>
+
+//
+//
+//void file_iterator(DCSP_CORE*& p)
+//{
+//	//std::filesystem::path img_path = R"(E:\project\Project_C++\DCPS_ONNX\TEST_ORIGIN)";
+//	//int k = 0;
+//	//for (auto& i : std::filesystem::directory_iterator(img_path))
+//	{
+//		//if (i.path().extension() == ".jpg")
+//		{
+//			std::string img_path = "D:/Work/cartificial_intelligence/yolov5/data/images/bus.jpg";
+//			//std::cout << img_path << std::endl;
+//			cv::Mat img = cv::imread(img_path);
+//			std::vector<DCSP_RESULT> res;
+//			char* ret = p->RunSession(img, res);
+//			for (int i = 0; i < res.size(); i++)
+//			{
+//				cv::rectangle(img, res.at(i).box, cv::Scalar(125, 123, 0), 3);
+//			}
+//			 
+//			cv::imshow("TEST_ORIGIN", img);
+//			cv::waitKey(0);
+//			cv::destroyAllWindows();
+//			//cv::imwrite("E:\\output\\" + std::to_string(k) + ".png", img);
+//		}
+//	}
+//}
+
+
+
+
+
+
+#include <opencv2/opencv.hpp>
+
+#include "cyolov_dnn.h"
+
+using namespace std;
+using namespace cv;
+//
+//int test_yolov_main(int argc, char **argv)
+//{
+//	std::string projectBasePath = "D:/Work/cartificial_intelligence/yolov5/data/images"; // Set your ultralytics base path
+//
+//	bool runOnGPU = true;
+//
+//	//
+//	// Pass in either:
+//	//
+//	// "yolov8s.onnx" or "yolov5s.onnx"
+//	//
+//	// To run Inference with yolov8/yolov5 (ONNX)
+//	//
+//
+//	// Note that in this example the classes are hard-coded and 'classes.txt' is a place holder.
+//	chen::cyolov inf(projectBasePath + "/yolov8s.onnx", cv::Size(640, 480), "classes.txt", runOnGPU);
+//
+//	std::vector<std::string> imageNames;
+//	imageNames.push_back(projectBasePath + "/bus.jpg");
+//	imageNames.push_back(projectBasePath + "/zidane.jpg");
+//
+//	for (int i = 0; i < imageNames.size(); ++i)
+//	{
+//		cv::Mat frame = cv::imread(imageNames[i]);
+//
+//		// Inference starts here...
+//		std::vector<chen::Detection> output = inf.runInference(frame);
+//
+//		int detections = output.size();
+//		std::cout << "Number of detections:" << detections << std::endl;
+//
+//		for (int i = 0; i < detections; ++i)
+//		{
+//			chen::Detection detection = output[i];
+//
+//			cv::Rect box = detection.box;
+//			cv::Scalar color = detection.color;
+//
+//			// Detection box
+//			cv::rectangle(frame, box, color, 2);
+//
+//			// Detection box text
+//			std::string classString = detection.className + ' ' + std::to_string(detection.confidence).substr(0, 4);
+//			cv::Size textSize = cv::getTextSize(classString, cv::FONT_HERSHEY_DUPLEX, 1, 2, 0);
+//			cv::Rect textBox(box.x, box.y - 40, textSize.width + 10, textSize.height + 20);
+//
+//			cv::rectangle(frame, textBox, color, cv::FILLED);
+//			cv::putText(frame, classString, cv::Point(box.x + 5, box.y - 10), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 0), 2, 0);
+//		}
+//		// Inference ends here...
+//
+//		// This is only for preview purposes
+//		float scale = 0.8;
+//		cv::resize(frame, frame, cv::Size(frame.cols*scale, frame.rows*scale));
+//		cv::imshow("Inference", frame);
+//
+//		cv::waitKey(-1);
+//	}
+//}
+#include "detector.h"
+void test_onnxruntime()
+{
+	chen::cyolov_onnxruntime detector;
+	bool isGPU = true;
+	chen::Utils utils;
+	const vector<string> classNames = utils.loadNames("D:/Work/cai/cdron_video_analysis/bin/x64/Release/weights/visdrone.names");
+	if (classNames.empty()) {
+		cerr << "Error: Empty class names file" << endl;
+		return;
+	}
+	 
+	std::vector<CDetection> result;
+	 
+	detector.YOLODetector(isGPU, cv::Size(640, 640));
+	std::cout << "Model was initialized......" << std::endl;
+	//image = cv::imread("D:/Work/cartificial_intelligence/yolov5/data/images/bus.jpg");
+	cv::VideoCapture* m_video_cap_ptr =  new cv::VideoCapture();
+
+	m_video_cap_ptr->open("rtsp://admin:admin12345@192.168.2.213", cv::CAP_FFMPEG);
+	if (!m_video_cap_ptr->isOpened())
+	{
+		std::cerr << "ERROR! Can't to open file: "   << std::endl;
+		//WARNING_EX_LOG("Can't ot open [source = %s]", source.c_str());
+		return  ;
+	}
+
+	//const int videoBaseIndex = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_STREAM);
+	int m_video_index = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_TOTAL_CHANNELS);
+	
+
+
+	{
+		cv::Mat img;
+		 
+		while (true)
+		{
+			
+			if (m_video_cap_ptr->grab() /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
+			{ 
+				m_video_cap_ptr->retrieve(img, m_video_index);
+				auto start = std::chrono::high_resolution_clock::now();
+				result = detector.detect(img, 0.25, 0.4);
+				 
+				
+				auto  end = std::chrono::high_resolution_clock::now();
+				auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+				// It should be known that it takes longer time at first time
+				std::cout <<"\n"<< std::endl;
+				std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
+				utils.visualizeDetection(img, result, classNames);
+				//cv::resizeWindow("cdron_video_analysis", 800, 600);
+				cv::imshow("cdron_video_analysis", img);
+				//cv::imwrite("test.jpg", img);
+				cv::waitKey(1);
+				 
+
+			}
+
+		}
+		
+	
+	}
+
+
+	 
+	 
+	cv::destroyAllWindows();
+}
+
 
 int main(int argc, char *argv[])
 {
+	//test_onnxruntime();
+	//return 0;
+	//test_yolov_main(0,NULL);
+
+
+	/*DCSP_CORE* p1 = new DCSP_CORE;
+	std::string model_path = "D:/Work/cartificial_intelligence/yolov5/data/images/yolov8s.onnx";
+	DCSP_INIT_PARAM params{ model_path, YOLO_ORIGIN_V8, {640, 640}, 80, 0.01, 0.3, true };
+	char* ret = p1->CreateSession(params);
+	file_iterator(p1);*/
+	//return 0;
 	RegisterSignal();
 
 	const char* config_filename = "server.cfg";
@@ -400,7 +586,7 @@ int main(int argc, char *argv[])
 	{
 		log_path = argv[2];
 	}
- 
+
 
 
 
@@ -418,11 +604,5 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
-
-
-
-
-
-
 
 

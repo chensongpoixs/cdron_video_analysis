@@ -36,12 +36,21 @@ purpose:		log
 #include "detector.h"
 #include "csingleton.h"
 #include "cnet_type.h"
+#include "cvideo_analysis_platform.h"
+#include "cyolov_onnxruntime.h"
 namespace chen
 {
 	class cvideo_analysis
 	{
 	public:
-		explicit cvideo_analysis() {}
+		explicit cvideo_analysis()
+		: m_video_analysis_type(EVideoAnalysisONNXRuntime)
+		, m_source_path("")
+		, m_stoped(true)
+		, m_detector_ptr(NULL)
+		, class_names()
+		, m_video_cap_ptr(NULL)
+		, m_video_index(-1){}
 		virtual ~cvideo_analysis() {}
 
 	public:
@@ -55,18 +64,21 @@ namespace chen
 
 
 		void _send_video_info(cv::Mat& img,
-			const std::vector<std::vector<Detection>>& detections,
+			const std::vector<std::vector<CDetection>>& detections,
 			const std::vector<std::string>& class_names,
 			bool label = true);
 	protected:
 	private:
-		std::string    m_source_path;
+		EVideoAnalysisPlatformType m_video_analysis_type;
+		std::string				m_source_path;
+		bool					m_stoped;
 		//std::string    m_weights_file;
-		Detector    * m_detector_ptr;
+		Detector				* m_detector_ptr;
+		cyolov_onnxruntime		* m_onnxruntime_ptr;
 		std::vector<std::string> class_names;
-		cv::VideoCapture * m_video_cap_ptr;
-		int32				m_video_index;
-		std::thread			m_thread;
+		cv::VideoCapture		* m_video_cap_ptr;
+		int32						m_video_index;
+		std::thread					m_thread;
 	};
 
 }

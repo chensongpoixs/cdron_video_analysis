@@ -31,7 +31,9 @@ purpose:		gateway
 #include "ctime_elapse.h"
 #include "clog.h"
 #include "cvideo_analysis.h"
+#include "cvideo_logic.h"
 #include "cmqtt_mgr.h"
+#include "cvideo_analysis_mgr.h"
 namespace chen {
 	cdron_video_analysls g_cdron_video_analysls;
 
@@ -75,7 +77,16 @@ namespace chen {
 		{
 			return false;
 		}
-	
+		SYSTEM_LOG("video logic init ");
+		if (!g_video_logic.init())
+		{
+			return false;
+		}
+		SYSTEM_LOG("video analysis mgr init ");
+		if (!g_video_analysis_mgr.init())
+		{
+			return false;
+		}
 
 		SYSTEM_LOG(" dron video analysls server init ok !!!");
 		return true;
@@ -87,13 +98,13 @@ namespace chen {
 		 
 		ctime_elapse time_elapse;
 		uint32 uDelta = 0;
-		cvideo_analysis analysis;
-		analysis.startup("rtsp://admin:admin12345@192.168.2.213");
+		//cvideo_analysis analysis;
+		//analysis.startup("rtsp://admin:admin12345@192.168.2.213");
 		while (!m_stop)
 		{
 			uDelta += time_elapse.get_elapse();
 	 
- 
+			g_video_logic.update(uDelta);
 			uDelta = time_elapse.get_elapse();
 
 			if (uDelta < TICK_TIME)
@@ -109,6 +120,9 @@ namespace chen {
 	void cdron_video_analysls::destroy()
 	{
 		SYSTEM_LOG("video analysls  Destroy OK!");
+		g_video_logic.destroy();
+		g_video_analysis_mgr.destroy();
+
 		s_mqtt_client_mgr.stop();
 		s_mqtt_client_mgr.destroy();
 		SYSTEM_LOG("mqtt destroy OK !!!");

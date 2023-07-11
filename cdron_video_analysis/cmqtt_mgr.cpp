@@ -26,7 +26,7 @@ namespace chen {
 		}
 		// 注册订阅的消息
 		 
-		m_mqtt_client_ptr->onConnect = std::bind(&cmqtt_mgr::_register_topic_all, this, std::placeholders::_1);
+		m_mqtt_client_ptr->onConnect = std::bind(&cmqtt_mgr::_register_mqtt_connect, this, std::placeholders::_1);
 		m_mqtt_client_ptr->onMessage = std::bind(&cmqtt_mgr::_register_mqtt_receive, this, std::placeholders::_1, std::placeholders::_2);
 		m_mqtt_client_ptr->onClose = std::bind(&cmqtt_mgr::_register_mqtt_close, this, std::placeholders::_1);
 
@@ -80,6 +80,7 @@ namespace chen {
 			delete m_mqtt_client_ptr;
 			m_mqtt_client_ptr = NULL;
 		}
+		m_msgs.clear();
 	}
 
 	void cmqtt_mgr::stop()
@@ -87,6 +88,14 @@ namespace chen {
 		if (m_mqtt_client_ptr)
 		{
 			m_mqtt_client_ptr->stop();
+		}
+	}
+
+	void cmqtt_mgr::process(std::list<cmqtt_msg>& msgs)
+	{
+		{
+			clock_guard  lock(m_lock);
+			msgs.swap(m_msgs);
 		}
 	}
 
@@ -98,7 +107,7 @@ namespace chen {
 		}
 	}
 
-	void cmqtt_mgr::_register_topic_all(hv::MqttClient * client_ptr)
+	void cmqtt_mgr::_register_mqtt_connect(hv::MqttClient * client_ptr)
 	{
 		if (!client_ptr)
 		{
@@ -106,7 +115,7 @@ namespace chen {
 			return;
 		}
 		SYSTEM_LOG("mqtt connect ok !!!");
-		static const char *VideoAnalysis = "VideoAnalysis";
+		static const char *VideoAnalysis = "video_analysis";
 		client_ptr->subscribe(VideoAnalysis);
 	}
 
@@ -114,6 +123,14 @@ namespace chen {
 	{
 		NORMAL_EX_LOG("topic: %.*s\n", msg->topic_len, msg->topic);
 		NORMAL_EX_LOG("payload: %.*s\n", msg->payload_len, msg->payload);
+		{
+			
+			clock_guard  lock(m_lock);
+			cmqtt_msg mqtt_msg;
+			mqtt_msg.m_topic = msg->topic;
+			mqtt_msg.m_payload = msg->payload;
+			m_msgs.push_back(mqtt_msg);
+		}
 	}
 
 	void cmqtt_mgr::_register_mqtt_close(hv::MqttClient * cli)

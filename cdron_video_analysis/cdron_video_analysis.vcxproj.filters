@@ -64,6 +64,12 @@
     <Filter Include="video_analysis">
       <UniqueIdentifier>{9a4bbbf9-2eb4-4f78-ac76-3746e815a257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="video_logic">
+      <UniqueIdentifier>{a54fff74-c732-48b9-b19c-c44b223e8f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="onnx_runtime">
+      <UniqueIdentifier>{0d27aad4-5cd2-4e34-8dde-e4a2731ae904}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -273,6 +279,18 @@
     <ClInclude Include="cvideo_analysis_mgr.h">
       <Filter>video_analysis</Filter>
     </ClInclude>
+    <ClInclude Include="cvideo_logic.h">
+      <Filter>video_logic</Filter>
+    </ClInclude>
+    <ClInclude Include="inference.h">
+      <Filter>onnx_runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="cyolov_onnxruntime.h">
+      <Filter>onnx_runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="cvideo_analysis_platform.h">
+      <Filter>video_analysis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -400,6 +418,15 @@
     </ClCompile>
     <ClCompile Include="cvideo_analysis_mgr.cpp">
       <Filter>video_analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="cvideo_logic.cpp">
+      <Filter>video_logic</Filter>
+    </ClCompile>
+    <ClCompile Include="inference.cpp">
+      <Filter>onnx_runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="cyolov_onnxruntime.cpp">
+      <Filter>onnx_runtime</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

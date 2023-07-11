@@ -9,7 +9,7 @@ enum Det {
     class_idx = 5
 };
 
-struct Detection {
+struct CDetection {
     cv::Rect bbox;
     float score;
     int class_idx;

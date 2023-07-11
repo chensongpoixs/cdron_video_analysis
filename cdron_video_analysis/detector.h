@@ -31,7 +31,7 @@ public:
      * @param iou_threshold - IoU threshold for nms
      * @return detection result - bounding box, score, class index
      */
-    std::vector<std::vector<Detection>>
+    std::vector<std::vector<CDetection>>
     Run(const cv::Mat& img, float conf_threshold, float iou_threshold);
 
 private:
@@ -53,7 +53,7 @@ private:
      * @param iou_thres - IoU threshold for NMS algorithm
      * @return detections with shape: nx7 (batch_index, x1, y1, x2, y2, score, classification)
      */
-    static std::vector<std::vector<Detection>> PostProcessing(const torch::Tensor& detections,
+    static std::vector<std::vector<CDetection>> PostProcessing(const torch::Tensor& detections,
                                                               float pad_w, float pad_h, float scale, const cv::Size& img_shape,
                                                               float conf_thres = 0.4, float iou_thres = 0.6);
 
@@ -65,7 +65,7 @@ private:
      * @param scale - zoom scale
      * @param img_shape - original input image shape
      */
-    static void ScaleCoordinates(std::vector<Detection>& data, float pad_w, float pad_h,
+    static void ScaleCoordinates(std::vector<CDetection>& data, float pad_w, float pad_h,
                                  float scale, const cv::Size& img_shape);
 
     /***

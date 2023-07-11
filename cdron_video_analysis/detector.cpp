@@ -22,10 +22,10 @@ Detector::Detector(const std::string& model_path, const torch::DeviceType& devic
 }
 
 
-std::vector<std::vector<Detection>>
+std::vector<std::vector<CDetection>>
 Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
     torch::NoGradGuard no_grad;
-    std::cout << "----------New Frame----------" << std::endl;
+   // std::cout << "----------New Frame----------" << std::endl;
 
     // TODO: check_img_size()
 	
@@ -82,7 +82,7 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
 
     // result: n * 7
     // batch index(0), top-left x/y (1,2), bottom-right x/y (3,4), score(5), class id(6)
-	std::vector<std::vector<Detection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
+	std::vector<std::vector<CDetection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
 
 	  end = std::chrono::high_resolution_clock::now();
 	  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -118,7 +118,7 @@ std::vector<float> Detector::LetterboxImage(const cv::Mat& src, cv::Mat& dst, co
 }
 
 
-std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor& detections,
+std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tensor& detections,
                                                              float pad_w, float pad_h, float scale, const cv::Size& img_shape,
                                                              float conf_thres, float iou_thres)
 {
@@ -131,9 +131,9 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
     auto num_classes = detections.size(2) - item_attr_size;
 
     // get candidates which object confidence > threshold
-    auto conf_mask = detections.select(2, 4).ge(conf_thres).unsqueeze(2);
+	at::Tensor conf_mask = detections.select(2, 4).ge(conf_thres).unsqueeze(2);
 
-    std::vector<std::vector<Detection>> output;
+    std::vector<std::vector<CDetection>> output;
     output.reserve(batch_size);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -144,8 +144,13 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
     // iterating all images in the batch
     for (int batch_i = 0; batch_i < batch_size; batch_i++) {
         // apply constrains to get filtered detections for current image
-        auto det = torch::masked_select(detections[batch_i], conf_mask[batch_i]).view({-1, num_classes + item_attr_size});
-
+		at::Tensor det = torch::masked_select(detections[batch_i], conf_mask[batch_i]).view({-1, num_classes + item_attr_size});
+		end = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		// It should be known that it takes longer time at first time
+		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+		NORMAL_EX_LOG("===> ttorch::masked_select  --> %u ms", duration.count());
+		start = end;
         // if none detections remain then skip and start to process next image
         if (0 == det.size(0)) {
             continue;
@@ -159,7 +164,12 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
 
         // [best class only] get the max classes score at each result (e.g. elements 5-84)
         std::tuple<torch::Tensor, torch::Tensor> max_classes = torch::max(det.slice(1, item_attr_size, item_attr_size + num_classes), 1);
-
+		end = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		// It should be known that it takes longer time at first time
+		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+		NORMAL_EX_LOG("===> torch::max  --> %u ms", duration.count());
+		start = end;
         // class score
         auto max_conf_score = std::get<0>(max_classes);
         // index
@@ -186,7 +196,12 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
 
         // use accessor to access tensor elements efficiently
         Tensor2Detection(offset_boxes_cpu.accessor<float,2>(), det_cpu_array, offset_box_vec, score_vec);
-
+		end = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		// It should be known that it takes longer time at first time
+		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+		NORMAL_EX_LOG("===> Tensor2Detection  --> %u ms", duration.count());
+		start = end;
         // run NMS
         std::vector<int> nms_indices;
         cv::dnn::NMSBoxes(offset_box_vec, score_vec, conf_thres, iou_thres, nms_indices);
@@ -196,11 +211,11 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
 		NORMAL_EX_LOG("===> nms_indices start  --> %u ms", duration.count());
 		start = end;
-        std::vector<Detection> det_vec;
+        std::vector<CDetection> det_vec;
 		NORMAL_EX_LOG("nms_indices = %u", nms_indices.size());
         for (int index : nms_indices)
 		{
-            Detection t;
+			CDetection t;
             const auto& b = det_cpu_array[index];
             t.bbox =
                     cv::Rect(cv::Point(b[Det::tl_x], b[Det::tl_y]),
@@ -224,13 +239,13 @@ std::vector<std::vector<Detection>> Detector::PostProcessing(const torch::Tensor
 }
 
 
-void Detector::ScaleCoordinates(std::vector<Detection>& data,float pad_w, float pad_h,
+void Detector::ScaleCoordinates(std::vector<CDetection>& data,float pad_w, float pad_h,
                                 float scale, const cv::Size& img_shape) {
     auto clip = [](float n, float lower, float upper) {
         return std::max(lower, std::min(n, upper));
     };
 
-    std::vector<Detection> detections;
+    std::vector<CDetection> detections;
     for (auto & i : data) {
         float x1 = (i.bbox.tl().x - pad_w)/scale;  // x padding
         float y1 = (i.bbox.tl().y - pad_h)/scale;  // y padding

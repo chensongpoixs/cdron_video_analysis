@@ -11,6 +11,7 @@ purpose:		log
 #include "clog.h"
 #include "cmqtt_mgr.h"
 #include "ccfg.h"
+#include "cyolov_onnxruntime.h"
 namespace chen {
 
 	std::vector<std::string> LoadNames(const std::string& path) {
@@ -34,31 +35,57 @@ namespace chen {
 
 	bool cvideo_analysis::init()
 	{
-		return false;
+		return true;
 	}
 	bool cvideo_analysis::startup(const std::string & source)
 	{
-		torch::DeviceType device_type;
-		if (torch::cuda::is_available() && true)
+		if (!m_stoped)
 		{
-			device_type = torch::kCUDA;
-		}
-		else {
-			device_type = torch::kCPU;
+			WARNING_EX_LOG("[source = %s] stoped ", m_source_path.c_str());
+			return false;
+			if (m_thread.joinable())
+			{
+				m_thread.join();
+			}
 		}
 
+		if (m_video_analysis_type != EVideoAnalysisONNXRuntime)
+		{
+			WARNING_EX_LOG("video analysis type = %u", m_video_analysis_type);
+			return false;
+		}
 		// load class names from dataset for visualization
-		 class_names = LoadNames("weights/coco.names");
+		class_names = LoadNames("weights/visdrone.names");
 		if (class_names.empty())
 		{
-			return -1;
+			WARNING_EX_LOG("not find weights/visdrone.names !!!");
+			return false;
 		}
-
-
-
-		// load network
-		std::string weights = "./weights/VisDrone.torchscript";
-		m_detector_ptr =new Detector(weights, device_type);
+		if (m_video_analysis_type == EVideoAnalysisTorchScript)
+		{
+			torch::DeviceType device_type;
+			if (torch::cuda::is_available() && true)
+			{
+				device_type = torch::kCUDA;
+			}
+			else {
+				device_type = torch::kCPU;
+			} 
+			// load network
+			std::string weights = "./weights/VisDrone.torchscript";
+			m_detector_ptr = new Detector(weights, device_type);
+		}
+		else  if (m_video_analysis_type == EVideoAnalysisONNXRuntime)
+		{
+			m_onnxruntime_ptr = new cyolov_onnxruntime();
+			if (!m_onnxruntime_ptr)
+			{
+				WARNING_EX_LOG("alloc onnxruntime failed !!!");
+				return false;
+			}
+			m_onnxruntime_ptr->YOLODetector(true, cv::Size(640, 640));
+			NORMAL_EX_LOG("[source = %s]onnxruntime  init OK !!!", source.c_str());
+		}
 
 
 		m_video_cap_ptr = new cv::VideoCapture();
@@ -67,28 +94,55 @@ namespace chen {
 		if (!m_video_cap_ptr->isOpened())
 		{
 			std::cerr << "ERROR! Can't to open file: " << source << std::endl;
+			WARNING_EX_LOG("Can't ot open [source = %s]", source.c_str());
 			return -1;
 		}
 
 		//const int videoBaseIndex = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_STREAM);
 		m_video_index = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_TOTAL_CHANNELS);
-
+		m_stoped = false;
 		m_thread = std::thread(&cvideo_analysis::_work_pthread, this);
 
 		return true;
 	}
 	void cvideo_analysis::stop()
 	{
+		m_stoped = true;
 	}
 	void cvideo_analysis::destroy()
 	{
+		m_stoped = true;
+		if (m_thread.joinable())
+		{
+			m_thread.join();
+			
+		}
+		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
+		if (m_detector_ptr)
+		{
+			delete m_detector_ptr;
+			m_detector_ptr = NULL;
+		}
+		if (m_onnxruntime_ptr)
+		{
+			delete m_onnxruntime_ptr;
+			m_onnxruntime_ptr = NULL;
+		}
+		if (m_video_cap_ptr)
+		{
+			delete m_video_cap_ptr;
+			m_video_cap_ptr = NULL;
+		}
+
+		class_names.clear();
 	}
 	void cvideo_analysis::_work_pthread()
 	{
 		bool one = true;
 		cv::Mat img;
-		std::vector<std::vector<Detection>> result;
-		for (;;)
+		std::vector<std::vector<CDetection>> result;
+		std::vector<CDetection> onnxruntimeresult;
+		while (!m_stoped)
 		{
 			auto start = std::chrono::high_resolution_clock::now();
 			if (m_video_cap_ptr->grab() /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
@@ -96,20 +150,26 @@ namespace chen {
 
 				 
 				m_video_cap_ptr->retrieve(img, m_video_index);
-				if (one)
+
+				if (one && m_detector_ptr)
 				{
 					//cv::cuda::GpuMat temp_img = cv::cuda::GpuMat(d_frame.rows, d_frame.cols, CV_32FC3);
 					auto temp_img = cv::Mat::zeros(img.rows, img.cols, CV_32FC3);
 					m_detector_ptr->Run(temp_img, 1.0f, 1.0f);
 					one = false;
 				}
-				
-				//if (frame_count > 5)
+				if (m_video_analysis_type == EVideoAnalysisTorchScript)
 				{
-					result =  m_detector_ptr->Run(img, 0.4, 0.5);
-					//frame_count = 0;
+					result = m_detector_ptr->Run(img, 0.25, 0.45);
 				}
+				else if (m_video_analysis_type == EVideoAnalysisONNXRuntime)
+				{
+					onnxruntimeresult = m_onnxruntime_ptr->detect(img, 0.25, 0.45);
+					result.push_back(onnxruntimeresult);
+				}
+				 
 				_send_video_info(img, result, class_names, false);
+				result.clear();
 				auto  end = std::chrono::high_resolution_clock::now();
 				auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 				// It should be known that it takes longer time at first time
@@ -130,7 +190,7 @@ namespace chen {
 	}
 
 	void cvideo_analysis::_send_video_info(cv::Mat& img,
-		const std::vector<std::vector<Detection>>& detections,
+		const std::vector<std::vector<CDetection>>& detections,
 		const std::vector<std::string>& class_names,
 		bool label) 
 	{
@@ -153,9 +213,9 @@ namespace chen {
 
 
 			Json::Value item;
-			for (const std::vector<Detection> & pvec : detections)
+			for (const std::vector<CDetection> & pvec : detections)
 			{
-				for (const Detection& detection : pvec)
+				for (const CDetection& detection : pvec)
 				{ 
 					 
 					item["x"] = detection.bbox.x;
@@ -165,9 +225,12 @@ namespace chen {
 					if (g_cfg.get_uint32(ECI_OpencvShow))
 					{
 						cv::rectangle(img, detection.bbox, cv::Scalar(0, 0, 255), 2);
-						std::stringstream ss;
-						ss << std::fixed << std::setprecision(2) << score;
-						std::string s = class_names[/*detection.class_idx > 0 ? detection.class_idx - 1 :*/ detection.class_idx] + " " + ss.str();
+						int conf = (int)std::round(detection.score * 100);
+						std::string s = class_names[/*detection.class_idx > 0 ? detection.class_idx - 1 :*/ detection.class_idx] + " " + +" 0." + std::to_string(conf);
+						
+						 
+						 
+
 
 						auto font_face = cv::FONT_HERSHEY_DUPLEX;
 						auto font_scale = 1.0;
@@ -268,11 +331,6 @@ namespace chen {
 			}
 			s_mqtt_client_mgr.publish("video_analysis/result", data.toStyledString());
 			//NORMAL_EX_LOG("json = %s\n", data.toStyledString().c_str());
-		}
-
-
-
-
-	}
-
+		} 
+	} 
 }

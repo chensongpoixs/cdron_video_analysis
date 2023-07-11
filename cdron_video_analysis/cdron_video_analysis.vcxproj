@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\libtorch\include;$(C_INCLUDE)\libtorch\include\torch\csrc\api\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(C_INCLUDE)\onnxruntime\include;$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\libtorch\include;$(C_INCLUDE)\libtorch\include\torch\csrc\api\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\vsout\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(C_INCLUDE)\boost\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(C_INCLUDE)\json\lib\x64\release;$(C_INCLUDE)\opencv\x64\vc16\lib;$(C_INCLUDE)\libtorch\lib;$(C_INCLUDE)\MNN\lib\x64\Release\Static\MD;$(C_INCLUDE)\libhv\lib;$(C_INCLUDE)\boost\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(C_INCLUDE)\onnxruntime\include;$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(C_INCLUDE)\boost\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(C_INCLUDE)\json\lib\x64\release;$(C_INCLUDE)\opencv\x64\vc16\lib;$(C_INCLUDE)\onnxruntime\lib;$(C_INCLUDE)\libtorch\lib;$(C_INCLUDE)\MNN\lib\x64\Release\Static\MD;$(C_INCLUDE)\libhv\lib;$(C_INCLUDE)\boost\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\vsout\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
@@ -143,7 +143,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>jsoncpp.lib;libboost_chrono-vc140-mt-1_60.lib;libboost_date_time-vc140-mt-1_60.lib;libboost_filesystem-vc140-mt-1_60.lib;libboost_locale-vc140-mt-1_60.lib;libboost_regex-vc140-mt-1_60.lib;libboost_system-vc140-mt-1_60.lib;libboost_thread-vc140-mt-1_60.lib;hv.lib;opencv_world460.lib;opencv_img_hash460.lib;c10.lib;kineto.lib;C:\Program Files\NVIDIA Corporation\NvToolsExt\\lib\x64\nvToolsExt64_1.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cudart_static.lib;caffe2_nvrtc.lib;c10_cuda.lib;torch.lib;torch_cuda.lib;torch_cpu.lib;-INCLUDE:?warp_size@cuda@at@@YAHXZ;C:\Program Files\NVIDIA Corporation\NvToolsExt\lib\x64\nvToolsExt64_1.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cufft.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\curand.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cublas.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cublasLt.lib;MNN.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>onnxruntime_providers_cuda.lib;onnxruntime_providers_shared.lib;onnxruntime_providers_tensorrt.lib;onnxruntime.lib;jsoncpp.lib;libboost_chrono-vc140-mt-1_60.lib;libboost_date_time-vc140-mt-1_60.lib;libboost_filesystem-vc140-mt-1_60.lib;libboost_locale-vc140-mt-1_60.lib;libboost_regex-vc140-mt-1_60.lib;libboost_system-vc140-mt-1_60.lib;libboost_thread-vc140-mt-1_60.lib;hv.lib;opencv_world460.lib;opencv_img_hash460.lib;c10.lib;kineto.lib;C:\Program Files\NVIDIA Corporation\NvToolsExt\\lib\x64\nvToolsExt64_1.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cudart_static.lib;caffe2_nvrtc.lib;c10_cuda.lib;torch.lib;torch_cuda.lib;torch_cpu.lib;-INCLUDE:?warp_size@cuda@at@@YAHXZ;C:\Program Files\NVIDIA Corporation\NvToolsExt\lib\x64\nvToolsExt64_1.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cufft.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\curand.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cublas.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\lib\x64\cublasLt.lib;MNN.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -178,8 +178,11 @@
     <ClInclude Include="ctime_elapse.h" />
     <ClInclude Include="cvideo_analysis.h" />
     <ClInclude Include="cvideo_analysis_mgr.h" />
+    <ClInclude Include="cvideo_analysis_platform.h" />
+    <ClInclude Include="cvideo_logic.h" />
     <ClInclude Include="cxxopts.h" />
     <ClInclude Include="cyolov_dnn.h" />
+    <ClInclude Include="cyolov_onnxruntime.h" />
     <ClInclude Include="detector.h" />
     <ClInclude Include="HyperLPR\basic_types.h" />
     <ClInclude Include="HyperLPR\buffer_module\all.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="HyperLPR\nn_module\mnn_adapter.h" />
     <ClInclude Include="HyperLPR\utils.h" />
     <ClInclude Include="HyperLPR\version.h" />
+    <ClInclude Include="inference.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -241,7 +245,9 @@
     <ClCompile Include="ctime_api.cpp" />
     <ClCompile Include="cvideo_analysis.cpp" />
     <ClCompile Include="cvideo_analysis_mgr.cpp" />
+    <ClCompile Include="cvideo_logic.cpp" />
     <ClCompile Include="cyolov_dnn.cpp" />
+    <ClCompile Include="cyolov_onnxruntime.cpp" />
     <ClCompile Include="detector.cpp" />
     <ClCompile Include="HyperLPR\buffer_module\camera_buffer.cpp" />
     <ClCompile Include="HyperLPR\context_module\hyper_lpr_context.cpp" />
@@ -257,6 +263,7 @@
     <ClCompile Include="HyperLPR\nn_implementation_module\recognition\plate_recognition.cpp" />
     <ClCompile Include="HyperLPR\nn_implementation_module\recognition\recognition_engine.cpp" />
     <ClCompile Include="HyperLPR\nn_module\mnn_adapter.cpp" />
+    <ClCompile Include="inference.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test_gpu.cpp" />
     <ClCompile Include="test_mqtt.cpp" />

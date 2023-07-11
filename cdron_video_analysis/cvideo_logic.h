@@ -5,8 +5,8 @@ author:			chensong
 
 purpose:		log
 ************************************************************************************************/
-#ifndef C_MQTT_MGR_H
-#define C_MQTT_MGR_H
+#ifndef C_VIDEO_LOGIC_H
+#define C_VIDEO_LOGIC_H
 #include <thread>
 #include <string>
 #include <functional>
@@ -33,58 +33,30 @@ purpose:		log
 #include <opencv2/cudacodec.hpp>
 #include "utils.h"
 #include <hv/mqtt_client.h>
+#include "detector.h"
 #include "csingleton.h"
+#include "cnet_type.h"
 namespace chen
 {
-	struct cmqtt_msg
-	{
-		std::string m_topic;
-		std::string m_payload;
-		cmqtt_msg(): m_topic(""), m_payload(""){}
-	};
-	class cmqtt_mgr
-	{
-	private:
-		typedef std::lock_guard<std::mutex>     clock_guard;
-	public:
-		explicit cmqtt_mgr() 
-		: m_mqtt_client_ptr(NULL)
-		, m_msgs(){}
-		virtual ~cmqtt_mgr() {}
 
+	class cvideo_logic
+	{
+	public:
+
+		explicit cvideo_logic() {}
+		virtual ~cvideo_logic(){}
 
 	public:
 
 		bool init();
-		bool startup();
+		void update(uint32 uDelta);
 		void destroy();
-
-
-		void stop();
-
-		void process(std::list<cmqtt_msg>&  msgs);
-	public:
-		void publish(const std::string& topic, const std::string& payload);
-	public:
-	private:
-
-		void  _register_mqtt_connect(hv::MqttClient * client_ptr);
-		void  _register_mqtt_receive(hv::MqttClient* cli, mqtt_message_t* msg);
-		void  _register_mqtt_close(hv::MqttClient* cli);
-
-
-	private:
-		void _work_thread();
+	
 	protected:
+
 	private:
-
-
-		hv::MqttClient*		m_mqtt_client_ptr;
-		std::thread			m_mqtt_thread;
-		
-		std::list<cmqtt_msg> m_msgs;
-		std::mutex			m_lock;
 	};
-#define  s_mqtt_client_mgr   chen::csingleton<chen::cmqtt_mgr>::get_instance()
+	extern cvideo_logic g_video_logic;
 }
+
 #endif // 

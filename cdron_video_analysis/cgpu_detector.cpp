@@ -30,7 +30,7 @@ namespace chen {
 	}
 
 
-	std::vector<std::vector<Detection>>
+	std::vector<std::vector<CDetection>>
 		cgpu_detector::Run(const cv::cuda::GpuMat& img, float conf_threshold, float iou_threshold) {
 		torch::NoGradGuard no_grad;
 		std::cout << "----------New Frame----------" << std::endl;
@@ -90,7 +90,7 @@ namespace chen {
 
 		// result: n * 7
 		// batch index(0), top-left x/y (1,2), bottom-right x/y (3,4), score(5), class id(6)
-		std::vector<std::vector<Detection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
+		std::vector<std::vector<CDetection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
 
 		auto  end = std::chrono::high_resolution_clock::now();
 		auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -126,7 +126,7 @@ namespace chen {
 	}
 
 
-	std::vector<std::vector<Detection>> cgpu_detector::PostProcessing(const torch::Tensor& detections,
+	std::vector<std::vector<CDetection>> cgpu_detector::PostProcessing(const torch::Tensor& detections,
 		float pad_w, float pad_h, float scale, const cv::Size& img_shape,
 		float conf_thres, float iou_thres) {
 		constexpr int item_attr_size = 5;
@@ -137,7 +137,7 @@ namespace chen {
 		// get candidates which object confidence > threshold
 		auto conf_mask = detections.select(2, 4).ge(conf_thres).unsqueeze(2);
 
-		std::vector<std::vector<Detection>> output;
+		std::vector<std::vector<CDetection>> output;
 		output.reserve(batch_size);
 
 		// iterating all images in the batch
@@ -190,9 +190,9 @@ namespace chen {
 			std::vector<int> nms_indices;
 			cv::dnn::NMSBoxes(offset_box_vec, score_vec, conf_thres, iou_thres, nms_indices);
 
-			std::vector<Detection> det_vec;
+			std::vector<CDetection> det_vec;
 			for (int index : nms_indices) {
-				Detection t;
+				CDetection t;
 				const auto& b = det_cpu_array[index];
 				t.bbox =
 					cv::Rect(cv::Point(b[Det::tl_x], b[Det::tl_y]),
@@ -212,13 +212,13 @@ namespace chen {
 	}
 
 
-	void cgpu_detector::ScaleCoordinates(std::vector<Detection>& data, float pad_w, float pad_h,
+	void cgpu_detector::ScaleCoordinates(std::vector<CDetection>& data, float pad_w, float pad_h,
 		float scale, const cv::Size& img_shape) {
 		auto clip = [](float n, float lower, float upper) {
 			return std::max(lower, std::min(n, upper));
 		};
 
-		std::vector<Detection> detections;
+		std::vector<CDetection> detections;
 		for (auto & i : data) {
 			float x1 = (i.bbox.tl().x - pad_w) / scale;  // x padding
 			float y1 = (i.bbox.tl().y - pad_h) / scale;  // y padding
