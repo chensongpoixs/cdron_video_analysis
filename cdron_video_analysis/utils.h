@@ -20,4 +20,9 @@ struct CDetection {
 		printf("[id = %u][score = %f][x = %u, y = %u, width = %u, height = %u]\n", class_idx, score, bbox.x, bbox.y, bbox.width, bbox.height);
 		//std::cout << "[id = ]"
 	}
+	void show() const
+	{
+		printf("[id = %u][score = %f][x = %u, y = %u, width = %u, height = %u]\n", class_idx, score, bbox.x, bbox.y, bbox.width, bbox.height);
+		//std::cout << "[id = ]"
+	}
 };

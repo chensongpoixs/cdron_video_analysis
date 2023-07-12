@@ -13,7 +13,7 @@ purpose:		log
 #if defined(_MSC_VER)
 #include <Windows.h>
 #endif
-
+#include "c_api/hyper_lpr_sdk.h"
 #include "opencv2/opencv.hpp"
 namespace chen
 {
@@ -27,12 +27,16 @@ namespace chen
 	public:
 
 		bool init(const char * models_path);
+		void destroy();
+	public:
 
 
-		bool recognition(cv::Mat image);
+		bool recognition(cv::Mat image, std::string & plate_codec);
 		
 	private:
 		std::string m_models_path;
+
+		P_HLPR_Context m_ctx_ptr;
 	};
 
 

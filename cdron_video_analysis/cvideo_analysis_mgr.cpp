@@ -25,6 +25,7 @@ namespace chen {
 			NORMAL_EX_LOG("[source = %s] free object OK !!! ", iter->first.c_str());
 		}
 		m_all_video_map.clear();
+		cv::destroyAllWindows();
 	}
 
 	cvideo_analysis * cvideo_analysis_mgr::get_video_analysis(const std::string & source)
@@ -42,7 +43,7 @@ namespace chen {
 			WARNING_EX_LOG("alloc [source = %s] failed !!!", source.c_str());
 			return NULL;
 		}
-
+		video_analysis_ptr->init();
 		if (!m_all_video_map.insert(std::make_pair(source, video_analysis_ptr)).second)
 		{
 			WARNING_EX_LOG("insert all video analysis map [source = %s] failed !!!", source.c_str());
@@ -65,7 +66,7 @@ namespace chen {
 		iter->second->destroy();
 		delete iter->second;
 		m_all_video_map.erase(iter);
-
+		
 		NORMAL_EX_LOG("del video analysis [source = %s] OK !!!", source.c_str());
 		return true;
 	}

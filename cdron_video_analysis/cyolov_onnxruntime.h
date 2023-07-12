@@ -57,7 +57,7 @@ namespace chen {
 		std::vector<CDetection> detect(cv::Mat &image, const float& confThreshold, const float& iouThreshold);
 
 	private:
-		std::string modelPath = "D:/Work/cartificial_intelligence/yolov5/data/images/VisDrone.onnx";
+		std::string modelPath = "weights/VisDrone.onnx";
 		Ort::Env env{ nullptr };//构建Ort的环境，这是一个线性的固定写法
 		Ort::SessionOptions sessionOptions{ nullptr };//session选项
 		Ort::Session session{ nullptr };//Ort session管理器

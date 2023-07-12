@@ -33,7 +33,9 @@ namespace chen {
 		ECI_TimeAdjust, 
 		ECI_HeartBeat,
 		ECI_MqttHost ,
-		ECI_MqttPort, 
+		ECI_MqttPort,
+		ECI_MqttUser,
+		ECI_MqttPasswd,
 		ECI_LogLevel,
 		ECI_OpencvShow,
 		 

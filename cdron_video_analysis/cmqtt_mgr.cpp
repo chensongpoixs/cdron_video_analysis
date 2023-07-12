@@ -33,9 +33,12 @@ namespace chen {
 
 		//////////////////
 
-#if TEST_AUTH
-		cli.setAuth("test", "123456");
-#endif
+		if (!g_cfg.get_string(ECI_MqttUser).empty() || !g_cfg.get_string(ECI_MqttPasswd).empty())
+		{
+			m_mqtt_client_ptr->setAuth(g_cfg.get_string(ECI_MqttUser).c_str(), g_cfg.get_string(ECI_MqttPasswd).c_str());
+		}
+		
+ 
 
  
 		reconn_setting_t reconn;

@@ -112,7 +112,8 @@ void Demo(cv::Mat& img,
 					//cv::imshow("plate_img", plate_img);
 					//cv::imwrite("test.jpg", img);
 					//cv::waitKey(1);
-					chen::g_license_plate.recognition(plate_img);
+					std::string plate_codc; 
+					chen::g_license_plate.recognition(plate_img, plate_codc);
 					//cvReleaseImage
 					
 				}
@@ -561,8 +562,18 @@ void test_onnxruntime()
 }
 
 
+void test_plate()
+{
+	chen::g_license_plate.init("./resource/models/r2_mobile");
+	std::string plate_code;
+	cv::Mat plate_img = cv::imread("./resource/images/test_img.jpg");
+	chen::g_license_plate.recognition(plate_img, plate_code);
+}
+
 int main(int argc, char *argv[])
 {
+	/*test_plate();
+	return 0;*/
 	//test_onnxruntime();
 	//return 0;
 	//test_yolov_main(0,NULL);

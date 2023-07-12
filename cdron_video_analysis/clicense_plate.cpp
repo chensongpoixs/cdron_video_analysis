@@ -8,6 +8,7 @@ purpose:		log
 
 #include "clicense_plate.h"
 #include <iostream>
+//#include "clog.h"
 #include "c_api/hyper_lpr_sdk.h"
 namespace chen {
 	static const std::vector<std::string> TYPES = { "蓝牌", "黄牌单层", "白牌单层", "绿牌新能源", "黑牌港澳", "香港单层", "香港双层", "澳门单层", "澳门双层", "黄牌双层" };
@@ -22,9 +23,35 @@ namespace chen {
 	bool clicense_plate::init(const char * models_path)
 	{
 		m_models_path = models_path;
+		// create context
+		HLPR_ContextConfiguration configuration = { 0 };
+		configuration.models_path = (char *)(m_models_path.c_str());
+		configuration.max_num = 5;
+		configuration.det_level = DETECT_LEVEL_LOW;
+		configuration.use_half = false;
+		configuration.nms_threshold = 0.5f;
+		configuration.rec_confidence_threshold = 0.5f;
+		configuration.box_conf_threshold = 0.30f;
+		configuration.threads = 1;
+		m_ctx_ptr = HLPR_CreateContext(&configuration);
+		HREESULT ret = HLPR_ContextQueryStatus(m_ctx_ptr);
+		if (ret != HResultCode::Ok)
+		{
+			printf("create error.\n");
+			return -1;
+		}
 		return true;
 	}
-	bool clicense_plate::recognition(cv::Mat image)
+	void clicense_plate::destroy()
+	{
+		if (m_ctx_ptr)
+		{
+			// release context
+			HLPR_ReleaseContext(m_ctx_ptr);
+		}
+		
+	}
+	bool clicense_plate::recognition(cv::Mat image, std::string & plate_codec)
 	{
 
 		// create ImageData
@@ -37,28 +64,12 @@ namespace chen {
 		// create DataBuffer
 		P_HLPR_DataBuffer buffer = HLPR_CreateDataBuffer(&data);
 
-		// create context
-		HLPR_ContextConfiguration configuration = { 0 };
-		configuration.models_path = (  char *)(m_models_path.c_str());
-		configuration.max_num = 5;
-		configuration.det_level = DETECT_LEVEL_LOW;
-		configuration.use_half = false;
-		configuration.nms_threshold = 0.5f;
-		configuration.rec_confidence_threshold = 0.5f;
-		configuration.box_conf_threshold = 0.30f;
-		configuration.threads = 1;
-		P_HLPR_Context ctx = HLPR_CreateContext(&configuration);
-		HREESULT ret = HLPR_ContextQueryStatus(ctx);
-		if (ret != HResultCode::Ok) 
-		{
-			printf("create error.\n");
-			return -1;
-		}
+		
 		// exec plate recognition
 		HLPR_PlateResultList results = { 0 };
 		double time;
 		time = (double)cv::getTickCount();
-		HLPR_ContextUpdateStream(ctx, buffer, &results);
+		HLPR_ContextUpdateStream(m_ctx_ptr, buffer, &results);
 		time = ((double)cv::getTickCount() - time) / cv::getTickFrequency();
 		printf("cost: %f\n", time);
 
@@ -74,7 +85,7 @@ namespace chen {
 
 			/*cv::rectangle(image, cv::Point2f(results.plates[i].x1, results.plates[i].y1), cv::Point2f(results.plates[i].x2, results.plates[i].y2),
 				cv::Scalar(100, 100, 200), 3);*/
-
+			plate_codec = results.plates[i].code;
 			printf("<%d> %s, %s, %f\n", i + 1, type.c_str(),
 				results.plates[i].code, results.plates[i].text_confidence);
 		}
@@ -85,8 +96,7 @@ namespace chen {
 
 		// release buffer
 		HLPR_ReleaseDataBuffer(buffer);
-		// release context
-		HLPR_ReleaseContext(ctx);
-		return false;
+		
+		return true;
 	}
 }

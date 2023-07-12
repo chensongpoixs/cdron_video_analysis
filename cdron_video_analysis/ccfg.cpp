@@ -41,12 +41,16 @@ namespace chen {
 		}
 		// é»˜è®¤å€¼
 		set_int32(ECI_TimeAdjust, "time_adjust", 0);
+		
 		set_string(ECI_MqttHost, "mqtt_host", "127.0.0.1");
 		set_uint32(ECI_MqttPort, "mqtt_port", 1883);
-		 
+		set_string(ECI_MqttUser, "mqtt_user", "");
+		set_string(ECI_MqttPasswd, "mqtt_passwd", "");
+
 
 		set_uint32(ECI_LogLevel, "log_level", ELogLevel_Num);
 		set_uint32(ECI_OpencvShow, "opencv_show", 0);
+		
  
 #if _DEBUG
 		set_uint32(ECI_LogLevel, "log_level", ELogLevel_Num);

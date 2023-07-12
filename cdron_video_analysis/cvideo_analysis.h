@@ -38,6 +38,7 @@ purpose:		log
 #include "cnet_type.h"
 #include "cvideo_analysis_platform.h"
 #include "cyolov_onnxruntime.h"
+#include "clicense_plate.h"
 namespace chen
 {
 	class cvideo_analysis
@@ -50,7 +51,10 @@ namespace chen
 		, m_detector_ptr(NULL)
 		, class_names()
 		, m_video_cap_ptr(NULL)
-		, m_video_index(-1){}
+		, m_video_index(-1)
+		, m_skip_frame(0)
+		, m_car_analysis(0)
+		, m_license_plate(){}
 		virtual ~cvideo_analysis() {}
 
 	public:
@@ -58,6 +62,15 @@ namespace chen
 		bool startup(const std::string & source);
 		void stop();
 		void destroy();
+	public:
+
+		bool get_startup() const { return !m_stoped; }
+
+
+
+		void set_skip_frame(uint32 count);
+		void set_car_analysis(uint32 analysis);
+
 	private:
 
 		void _work_pthread();
@@ -69,16 +82,19 @@ namespace chen
 			bool label = true);
 	protected:
 	private:
-		EVideoAnalysisPlatformType m_video_analysis_type;
-		std::string				m_source_path;
-		bool					m_stoped;
-		//std::string    m_weights_file;
-		Detector				* m_detector_ptr;
-		cyolov_onnxruntime		* m_onnxruntime_ptr;
-		std::vector<std::string> class_names;
-		cv::VideoCapture		* m_video_cap_ptr;
+		EVideoAnalysisPlatformType	m_video_analysis_type;
+		std::string					m_source_path;
+		bool						m_stoped;
+		//std::string				m_weights_file;
+		Detector				*	 m_detector_ptr;
+		cyolov_onnxruntime		*	m_onnxruntime_ptr;
+		std::vector<std::string>	class_names;
+		cv::VideoCapture		*	m_video_cap_ptr;
 		int32						m_video_index;
 		std::thread					m_thread;
+		uint32						m_skip_frame;
+		uint32						m_car_analysis;
+		clicense_plate				m_license_plate;
 	};
 
 }
