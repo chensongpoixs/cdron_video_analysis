@@ -45,7 +45,7 @@ namespace chen
 	{
 	public:
 		explicit cvideo_analysis()
-		: m_video_analysis_type(EVideoAnalysisONNXRuntime)
+		: m_video_analysis_type(EVideoAnalysisTorchScript)
 		, m_source_path("")
 		, m_stoped(true)
 		, m_detector_ptr(NULL)
@@ -80,6 +80,7 @@ namespace chen
 			const std::vector<std::vector<CDetection>>& detections,
 			const std::vector<std::string>& class_names,
 			bool label = true);
+		std::string _recognize_vehicle_color(const cv::Mat& img);
 	protected:
 	private:
 		EVideoAnalysisPlatformType	m_video_analysis_type;

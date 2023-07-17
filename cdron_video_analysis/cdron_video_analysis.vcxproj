@@ -181,6 +181,7 @@
     <ClInclude Include="cvideo_analysis_platform.h" />
     <ClInclude Include="cvideo_logic.h" />
     <ClInclude Include="cxxopts.h" />
+    <ClInclude Include="cyolov_torch.h" />
     <ClInclude Include="cyolov_dnn.h" />
     <ClInclude Include="cyolov_onnxruntime.h" />
     <ClInclude Include="detector.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="cvideo_analysis.cpp" />
     <ClCompile Include="cvideo_analysis_mgr.cpp" />
     <ClCompile Include="cvideo_logic.cpp" />
+    <ClCompile Include="cyolov_torch.cpp" />
     <ClCompile Include="cyolov_dnn.cpp" />
     <ClCompile Include="cyolov_onnxruntime.cpp" />
     <ClCompile Include="detector.cpp" />

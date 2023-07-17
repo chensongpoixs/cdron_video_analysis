@@ -70,6 +70,9 @@
     <Filter Include="onnx_runtime">
       <UniqueIdentifier>{0d27aad4-5cd2-4e34-8dde-e4a2731ae904}</UniqueIdentifier>
     </Filter>
+    <Filter Include="torch">
+      <UniqueIdentifier>{790db737-a6f7-46d8-9073-6aea4bbb0dff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -291,6 +294,9 @@
     <ClInclude Include="cvideo_analysis_platform.h">
       <Filter>video_analysis</Filter>
     </ClInclude>
+    <ClInclude Include="cyolov_torch.h">
+      <Filter>torch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -427,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="cyolov_onnxruntime.cpp">
       <Filter>onnx_runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="cyolov_torch.cpp">
+      <Filter>torch</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

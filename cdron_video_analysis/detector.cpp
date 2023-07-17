@@ -14,9 +14,10 @@ Detector::Detector(const std::string& model_path, const torch::DeviceType& devic
     half_ = (device_ != torch::kCPU);
     module_.to(device_);
 
-    if (half_) {
-        module_.to(torch::kHalf);
-    }
+	if (half_) 
+	{
+	//	module_.to(torch::kHalf);
+	}
 
     module_.eval();
 }
@@ -52,9 +53,9 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
     tensor_img = tensor_img.permute({0, 3, 1, 2}).contiguous();  // BHWC -> BCHW (Batch, Channel, Height, Width)
 	
     if (half_) {
-        tensor_img = tensor_img.to(torch::kHalf);
+       // tensor_img = tensor_img.to(torch::kHalf);
     }
-
+	tensor_img = tensor_img.to(torch::kCUDA);
     std::vector<torch::jit::IValue> inputs;
     inputs.emplace_back(tensor_img);
 
@@ -144,12 +145,20 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
     // iterating all images in the batch
     for (int batch_i = 0; batch_i < batch_size; batch_i++) {
         // apply constrains to get filtered detections for current image
-		at::Tensor det = torch::masked_select(detections[batch_i], conf_mask[batch_i]).view({-1, num_classes + item_attr_size});
+		//torch::from_numpy(im).to(model.device)
+		at::Tensor det1 = torch::masked_select(detections[batch_i], conf_mask[batch_i]);
 		end = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
 		NORMAL_EX_LOG("===> ttorch::masked_select  --> %u ms", duration.count());
+		start = end;
+		at::Tensor det = det1.view({ -1, num_classes + item_attr_size });
+		end = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		// It should be known that it takes longer time at first time
+		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+		NORMAL_EX_LOG("===> ttorch::masked_select view --> %u ms", duration.count());
 		start = end;
         // if none detections remain then skip and start to process next image
         if (0 == det.size(0)) {

@@ -16,6 +16,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <json/json.h>
+#include "cyolov_torch.h"
 #include "cyolov_onnxruntime.h"
 #include "inference.h"
 /******************************************************************************************
@@ -570,8 +571,156 @@ void test_plate()
 	chen::g_license_plate.recognition(plate_img, plate_code);
 }
 
+torch::Tensor getRegionData(std::vector<cv::Point> points, torch::Tensor preData, bool in)
+{
+
+	std::vector<int> index;
+
+	for (int i = 0; i < preData.size(0); i++)
+	{
+		int sx = preData[i][0].item().toInt();
+		int sy = preData[i][1].item().toInt();
+		int ex = preData[i][2].item().toInt();
+		int ey = preData[i][3].item().toInt();
+		// 完全在里面
+		if ((in && cv::pointPolygonTest(points, cv::Point(sx, sy), false) > 0
+			&& cv::pointPolygonTest(points, cv::Point(sx, ey), false) > 0
+			&& cv::pointPolygonTest(points, cv::Point(ex, sy), false) > 0
+			&& cv::pointPolygonTest(points, cv::Point(ex, ey), false) > 0) ||
+			// 部分在里面
+			(!in && (cv::pointPolygonTest(points, cv::Point(sx, sy), false) > 0
+				|| cv::pointPolygonTest(points, cv::Point(sx, ey), false) > 0
+				|| cv::pointPolygonTest(points, cv::Point(ex, sy), false) > 0
+				|| cv::pointPolygonTest(points, cv::Point(ex, ey), false) > 0)))
+		{
+			index.push_back(i);
+		}
+	}
+	return preData.index_select(0, torch::tensor(index));
+}
+void roiHandle( cv::Mat &img, std::vector<cv::Point> points, std::vector<torch::Tensor> &r)
+{
+	/*if (para[ROI].t == STRING || para[ROI].getB())
+	{
+		cv::polylines(img, points, true, cv::Scalar(0, 0, 255));
+		torch::Tensor preData = r.back();
+		r.pop_back();
+		if (para[ROI].t == BOOL && para[ROI].getB())
+			r.push_back(getRegionData(points, preData, true));
+		else
+		{
+			r.push_back(getRegionData(points, preData, !!(strcmp(para[ROI].getS().c_str(), ROI_ON) != 0)));
+		}
+	}*/
+	cv::polylines(img, points, true, cv::Scalar(0, 0, 255));
+	torch::Tensor preData = r.back();
+	r.push_back(getRegionData(points, preData, true));
+}
+
+void test_yolov_torch()
+{
+	chen::cyolov_torch yolov_torch("weights/VisDrone.torchscript", "v5", "gpu");
+	yolov_torch.prediction(torch::rand({ 1, 3, 640, 640 }));
+	// 读取分类标签（我们用的官方的所以这里是 coco 中的分类）
+	// 其实这些代码无所谓哪 只是后面预测出来的框没有标签罢了
+	std::ifstream f("weights/coco.names");
+	std::string name = "";
+	//cv::namedWindow("yolov_torch", cv::WINDOW_NORMAL | cv::WINDOW_FREERATIO);
+	//cv::resizeWindow("yolov_torch", 640, 640);
+	int i = 0;
+	std::map<int, std::string> labels;
+	while (std::getline(f, name))
+	{
+		labels.insert(std::pair<int, std::string>(i, name));
+		i++;
+	}
+
+	cv::VideoCapture *cap = new cv::VideoCapture("rtsp://admin:admin12345@192.168.2.213");;
+	 
+
+	if (!cap->isOpened())
+	{
+		printf("input error\n");
+		return ;
+	}
+	int m_video_index = (int)cap->get(cv::CAP_PROP_VIDEO_TOTAL_CHANNELS);
+	// 设置宽高 无所谓多宽多高后面都会通过一个算法转换为固定宽高的
+	// 固定宽高值应该是你通过Yolo训练得到的模型所需要的
+	// 传入方式是构造 Yolo 对象时传入 width 默认值为 640，height 默认值为 640
+	//cap->set(cv::CAP_PROP_FRAME_WIDTH,640);
+	//cap->set(cv::CAP_PROP_FRAME_HEIGHT, 640);
+	cv::Mat frame;
+
+	while (cap->isOpened())
+	{
+		// 读取一帧
+		/*cap->read(frame);
+		if (frame.empty())
+		{
+			printf("read frame failed!\n");
+			break;
+		}*/
+
+
+
+		// 初始化输出方法
+		/*if (outputVideo == nullptr && para[OUTPUT].t == STRING)
+		{
+			int fps = cap->get(cv::CAP_PROP_FPS);
+			if (!fps)
+			{
+				fps = 24;
+			}
+			outputVideo = new cv::VideoWriter(para[OUTPUT].getS() + OUTPUT_SUFFIX, cv::VideoWriter::fourcc('M', 'P', '4', 'V'), fps, frame.size());
+		}*/
+		if (cap->grab() && cap->retrieve(frame, m_video_index))
+		{ 
+			// 预测
+			auto start = std::chrono::high_resolution_clock::now();
+			std::vector<torch::Tensor> r = yolov_torch.prediction(frame);
+			auto  end = std::chrono::high_resolution_clock::now();
+			auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+			// It should be known that it takes longer time at first time
+			//std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
+			printf(" post-process takes : %u ms\n",  duration.count());
+
+			//roiHandle( frame, points, r);
+
+			// 画框根据你自己的项目调用相应的方法，也可以不画框自己处理
+			frame = yolov_torch.drawRectangle(frame, r[0], labels);
+
+			/*if (outputVideo != nullptr)
+			{
+				outputVideo->write(frame);
+			}*/
+			// show and exit
+			/*if (!para[IS_CLOSE].getB())
+			{
+				if (cv::waitKey(1) == 27 || cv::getWindowProperty(WINDOW_NAME, cv::WND_PROP_VISIBLE) < 1.0) break;
+				cv::imshow(WINDOW_NAME, frame);
+			}*/
+			cv::imshow("yolov_torch", frame);
+			cv::waitKey(1);
+		}
+	}
+
+	/*if (outputVideo != nullptr)
+	{
+		outputVideo->release();
+		delete outputVideo;
+	}
+*/
+	cap->release();
+	delete cap;
+	cv::destroyAllWindows();
+
+	return ;
+}
+
 int main(int argc, char *argv[])
 {
+	//test_yolov_torch();
+	//return 0;
 	/*test_plate();
 	return 0;*/
 	//test_onnxruntime();

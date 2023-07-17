@@ -167,7 +167,7 @@ namespace chen {
 	{
 		env = Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "yolov5_ONNXRUNTIME");//创建yolov5运行环境
 		sessionOptions = Ort::SessionOptions();//sessionOptions选择项
-		sessionOptions.SetIntraOpNumThreads(1);
+		sessionOptions.SetIntraOpNumThreads(3);
 		sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 		OrtCUDAProviderOptions cudaOption;
 		   // sessionOptions.AppendExecutionProvider_CUDA(cudaOption);
