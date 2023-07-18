@@ -105,7 +105,7 @@ imagePadding(const cv::Mat &image, cv::Mat &out, float max_wh_ratio, cv::Size ta
     auto ratio = (float) image_w / image_h;
     int ratio_img_h = ceil(target_h * ratio);
     ratio_img_h = std::max(ratio_img_h, limited_min_width);
-    int resized_w;
+    int resized_w = 0;
     if (ratio_img_h > target_w) {
         resized_w = target_w;
     } else {
@@ -114,9 +114,9 @@ imagePadding(const cv::Mat &image, cv::Mat &out, float max_wh_ratio, cv::Size ta
     cv::Mat resized_image;
     cv::resize(image, resized_image, cv::Size(resized_w, target_h));
 
-
-    int wpad = std::max(target_size.width - resized_w, 0);
-    int hpad = std::max(target_size.height - target_h, 0);
+	//TODO@chensong 2023-07-18 resized_w:会崩溃的变量需要初始化
+	int wpad = /*::max(, 0);*/ target_size.width - resized_w > 0 ?(target_size.width - resized_w) : 0;
+	int hpad = /*std::max(target_size.height - target_h, 0);*/ target_size.height - target_h > 0 ? (target_size.height - target_h) : 0;
 //    std::cout << resized_w << "," << target_h << std::endl;
     cv::copyMakeBorder(resized_image, out, 0, hpad, 0, wpad, cv::BORDER_CONSTANT, cv::Scalar(127.5f, 127.5f, 127.5f));
 

@@ -27,12 +27,12 @@ namespace chen {
 		HLPR_ContextConfiguration configuration = { 0 };
 		configuration.models_path = (char *)(m_models_path.c_str());
 		configuration.max_num = 5;
-		configuration.det_level = DETECT_LEVEL_LOW;
+		configuration.det_level = DETECT_LEVEL_HIGH;
 		configuration.use_half = false;
 		configuration.nms_threshold = 0.5f;
 		configuration.rec_confidence_threshold = 0.5f;
 		configuration.box_conf_threshold = 0.30f;
-		configuration.threads = 1;
+		configuration.threads = 5;
 		m_ctx_ptr = HLPR_CreateContext(&configuration);
 		HREESULT ret = HLPR_ContextQueryStatus(m_ctx_ptr);
 		if (ret != HResultCode::Ok)
@@ -67,27 +67,29 @@ namespace chen {
 		
 		// exec plate recognition
 		HLPR_PlateResultList results = { 0 };
-		double time;
-		time = (double)cv::getTickCount();
+		//double time;
+		//time = (double)cv::getTickCount();
 		HLPR_ContextUpdateStream(m_ctx_ptr, buffer, &results);
-		time = ((double)cv::getTickCount() - time) / cv::getTickFrequency();
-		printf("cost: %f\n", time);
+		//time = ((double)cv::getTickCount() - time) / cv::getTickFrequency();
+	//	printf("cost: %f\n", time);
 
 
 		for (int i = 0; i < results.plate_size; ++i) {
 			std::string type;
-			if (results.plates[i].type == HLPR_PlateType::PLATE_TYPE_UNKNOWN) {
+			if (results.plates[i].type == HLPR_PlateType::PLATE_TYPE_UNKNOWN) 
+			{
 				type = "未知";
 			}
-			else {
+			else 
+			{
 				type = TYPES[results.plates[i].type];
 			}
 
 			/*cv::rectangle(image, cv::Point2f(results.plates[i].x1, results.plates[i].y1), cv::Point2f(results.plates[i].x2, results.plates[i].y2),
 				cv::Scalar(100, 100, 200), 3);*/
 			plate_codec = results.plates[i].code;
-			printf("<%d> %s, %s, %f\n", i + 1, type.c_str(),
-				results.plates[i].code, results.plates[i].text_confidence);
+			//printf("<%d> %s, %s, %f\n", i + 1, type.c_str(),
+			//	results.plates[i].code, results.plates[i].text_confidence);
 		}
 
 		//    cv::imwrite("out.jpg", image);

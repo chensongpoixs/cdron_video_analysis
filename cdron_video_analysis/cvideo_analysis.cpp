@@ -173,7 +173,7 @@ namespace chen {
 		while (!m_stoped)
 		{
 			auto start = std::chrono::high_resolution_clock::now();
-			if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index)/*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
+			if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
 			{
 
 				 
@@ -276,7 +276,7 @@ namespace chen {
 							//cv::imshow("plate_img", plate_img);
 							//cv::imwrite("test.jpg", img);
 							//cv::waitKey(1);
-							car_color = _recognize_vehicle_color(plate_img);
+							//car_color = _recognize_vehicle_color(plate_img);
 							m_license_plate.recognition(plate_img, plate_code);
 							
 						//cvReleaseImage
