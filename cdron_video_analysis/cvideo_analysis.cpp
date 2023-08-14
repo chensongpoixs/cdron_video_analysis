@@ -412,7 +412,7 @@ namespace chen {
 			}
 			if (!data.empty())
 			{
-				s_mqtt_client_mgr.publish("video_analysis/result", data.toStyledString());
+				s_mqtt_client_mgr.publish("video_analysis/result/" +m_result_video_analysis, data.toStyledString());
 			}
 			//NORMAL_EX_LOG("json = %s\n", data.toStyledString().c_str());
 		} 

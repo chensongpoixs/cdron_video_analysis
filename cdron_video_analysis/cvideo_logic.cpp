@@ -65,6 +65,7 @@ namespace chen {
 					bool         parse_video_skip_frame = false;
 					uint32		 car_analysis = 0;
 					bool		 parse_car_analysis = false;
+					std::string	 result_video_analysis;
 					bool ret = true;
 					try
 					{
@@ -72,6 +73,7 @@ namespace chen {
 						PARSE_VALUE(action, UInt, false, parse_video_skip_frame);
 						PARSE_VALUE(video_skip_frame, UInt, true, parse_video_skip_frame);
 						PARSE_VALUE(car_analysis, UInt, true, parse_car_analysis);
+						PARSE_VALUE(result_video_analysis, String, false, parse_video_skip_frame);
 
 					}
 					catch (const std::exception&)

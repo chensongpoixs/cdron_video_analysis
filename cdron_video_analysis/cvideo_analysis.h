@@ -54,7 +54,8 @@ namespace chen
 		, m_video_index(-1)
 		, m_skip_frame(0)
 		, m_car_analysis(0)
-		, m_license_plate(){}
+		, m_license_plate()
+		, m_result_video_analysis(""){}
 		virtual ~cvideo_analysis() {}
 
 	public:
@@ -96,6 +97,7 @@ namespace chen
 		uint32						m_skip_frame;
 		uint32						m_car_analysis;
 		clicense_plate				m_license_plate;
+		std::string					m_result_video_analysis;
 	};
 
 }
