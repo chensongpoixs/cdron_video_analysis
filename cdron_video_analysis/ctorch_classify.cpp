@@ -6,29 +6,75 @@ author:			chensong
 purpose:		log
 ************************************************************************************************/
 #include "ctorch_classify.h"
-
+#include "clog.h"
 namespace chen {
 
 
 
-	ctorch_classify::ctorch_classify()
+	 
+	ctorch_classify::ctorch_classify(std::string pt)
+		: m_device(torch::kCUDA)
 	{
-	}
+		if (torch::cuda::is_available()) {
+			NORMAL_EX_LOG("CUDA available! Test on GPU.");
+			m_device = torch::kCUDA;
+		}
+		else {
+			NORMAL_EX_LOG("Test on CPU.");
+			m_device = torch::kCPU;
+		}
+		m_model = torch::jit::load(pt);;
+		m_model.to(m_device);
+		m_model.eval();
 
+	}
 	ctorch_classify::~ctorch_classify()
 	{
 	}
 
-	bool ctorch_classify::init()
+	
+
+	cls_socre ctorch_classify::classitfy(cv::Mat img)
 	{
-		return true;
+		//norm
+		cv::Mat image_resized_float = setNorm(img);
+		//mean
+		cv::Mat image_resized_merge = setMean(image_resized_float);
+
+		auto img_tensor = torch::from_blob(image_resized_merge.data, { 224, 224, 3 }, torch::kFloat32);
+		auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
+		img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });													//	auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
+		//img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });
+		//printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+		// Create a vector of inputs.
+		std::vector<torch::jit::IValue> inputs;
+		inputs.push_back(img_tensor_.to(m_device));
+		torch::Tensor prob = m_model.forward(inputs).toTensor();
+		torch::Tensor output = torch::softmax(prob, 1);
+		auto predict = torch::max(output, 1);
+		//cout << "cost time:" << clock() - start_t << endl;
+		 //std::cout << img_paths[i] << "\t";
+		//for (int  w = 0; w < 2; ++w)
+		//{
+		//	//	int index = w * 2;
+		//	//	int po = w * 2 + 1;
+		//	std::cout << "class: " << std::get<1>(predict).item<int>() <<
+		//		", prob: " << std::get<0>(predict).item<float>() << std::endl;
+		//	/*std::cout << "class: " << std::get<3>(predict).item<int>() <<
+		//		", prob: " << std::get<2>(predict).item<float>() << std::endl;*/
+		//}
+		 cls_socre cur;
+		 cur.index = std::get<1>(predict).item<int>();
+		 cur.socre = std::get<0>(predict).item<float>();
+		 return cur;// cls_socre{ std::get<1>(predict).item<int>() ,std::get<0>(predict).item<float>() };
 	}
 
+	 
 	void ctorch_classify::destroy()
 	{
 	}
 
-	cv::Mat pilResize(cv::Mat &img, int size) {
+	cv::Mat ctorch_classify::pilResize(cv::Mat &img, int size) {
 		int imgWidth = img.cols;
 		int imgHeight = img.rows;
 		if ((imgWidth <= imgHeight && imgWidth == size) || (imgHeight <= imgWidth && imgHeight == size)) {
@@ -49,7 +95,7 @@ namespace chen {
 		return output;
 	}
 
-	cv::Mat pilCropCenter(cv::Mat &img, int output_size) {
+	cv::Mat ctorch_classify::pilCropCenter(cv::Mat &img, int output_size) {
 		cv::Rect imgRect;
 		imgRect.x = int(round((img.cols - output_size) / 2.));
 		imgRect.y = int(round((img.rows - output_size) / 2.));
@@ -59,7 +105,7 @@ namespace chen {
 		return img(imgRect).clone();
 	}
 
-	cv::Mat setNorm(cv::Mat &img) {
+	cv::Mat ctorch_classify::setNorm(cv::Mat &img) {
 		cv::Mat img_rgb;
 		cv::cvtColor(img, img_rgb, cv::COLOR_RGB2BGR);
 
@@ -72,7 +118,7 @@ namespace chen {
 		return image_resized_float;
 	}
 
-	cv::Mat setMean(cv::Mat &image_resized_float)
+	cv::Mat ctorch_classify::setMean(cv::Mat &image_resized_float)
 	{
 		std::vector<float> mean = { 0.485, 0.456, 0.406 };
 		std::vector<float> std = { 0.229, 0.224, 0.225 };
@@ -93,80 +139,80 @@ namespace chen {
 	void test_classification()
 	{
 
-		torch::DeviceType device_type;
-		if (torch::cuda::is_available()) {
-			std::cout << "CUDA available! Test on GPU." << std::endl;
-			device_type = torch::kCUDA;
-		}
-		else {
-			std::cout << "Test on CPU." << std::endl;
-			device_type = torch::kCPU;
-		}
-		torch::Device device(device_type);
+		//torch::DeviceType device_type;
+		//if (torch::cuda::is_available()) {
+		//	std::cout << "CUDA available! Test on GPU." << std::endl;
+		//	device_type = torch::kCUDA;
+		//}
+		//else {
+		//	std::cout << "Test on CPU." << std::endl;
+		//	device_type = torch::kCPU;
+		//}
+		//torch::Device device(device_type);
 
-		// Deserialize the ScriptModule from a file using torch::jit::load().
-		torch::jit::script::Module model = torch::jit::load("weights/yolov5s-cls.torchscript");
-		//torch::jit::script::Module model = torch::jit::load("weights/yolov5s-cls.pt");
-		model.to(device);
-		model.eval();
-		std::vector<std::string> classes = { "cat","dog" };
+		//// Deserialize the ScriptModule from a file using torch::jit::load().
+		//torch::jit::script::Module model = torch::jit::load("weights/yolov5s-cls.torchscript");
+		////torch::jit::script::Module model = torch::jit::load("weights/yolov5s-cls.pt");
+		//model.to(device);
+		//model.eval();
+		//std::vector<std::string> classes = { "cat","dog" };
 
-		/*std::string test_path = "val/dog/";
-		std::vector<std::string> img_paths;
-		cv::glob(test_path, img_paths);*/
+		///*std::string test_path = "val/dog/";
+		//std::vector<std::string> img_paths;
+		//cv::glob(test_path, img_paths);*/
 
-		int truth_count = 0;
+		//int truth_count = 0;
 
-		//for (int i = 0; i < img_paths.size(); i++)
-		{
-			cv::Mat img = cv::imread("resource/images/0086_c015_00081770_0.jpg"/*img_paths[i]*/);
+		////for (int i = 0; i < img_paths.size(); i++)
+		//{
+		//	cv::Mat img = cv::imread("resource/images/0086_c015_00081770_0.jpg"/*img_paths[i]*/);
 
-			//clock_t start_t = clock();
+		//	//clock_t start_t = clock();
 
-			//norm
-			//cv::Mat image_resized_float = setNorm(img);
-			//mean
-			//cv::Mat image_resized_merge = setMean(image_resized_float);
-			 
-			//norm
-			cv::Mat image_resized_float = setNorm(img);
-			//mean
-			cv::Mat image_resized_merge = setMean(image_resized_float);
+		//	//norm
+		//	//cv::Mat image_resized_float = setNorm(img);
+		//	//mean
+		//	//cv::Mat image_resized_merge = setMean(image_resized_float);
+		//	 
+		//	//norm
+		//	cv::Mat image_resized_float = setNorm(img);
+		//	//mean
+		//	cv::Mat image_resized_merge = setMean(image_resized_float);
 
-			auto img_tensor = torch::from_blob(image_resized_merge.data, { 224, 224, 3 }, torch::kFloat32);
-			auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
-			img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });													//	auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
-			//img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });
-			printf("[%s][%d]\n", __FUNCTION__, __LINE__);
-			// Create a vector of inputs.
-			std::vector<torch::jit::IValue> inputs;
-			inputs.push_back(img_tensor_.to(device));
-			torch::Tensor prob = model.forward(inputs).toTensor();
-			torch::Tensor output = torch::softmax(prob, 1);
-			auto predict = torch::max(output, 1);
-			//cout << "cost time:" << clock() - start_t << endl;
-			 //std::cout << img_paths[i] << "\t";
-			//for (int  w = 0; w < 2; ++w)
-			{
-			//	int index = w * 2;
-			//	int po = w * 2 + 1;
-				std::cout << "class: " << std::get<1>(predict).item<int>() <<
-					", prob: " << std::get<0>(predict).item<float>() << std::endl;
-				/*std::cout << "class: " << std::get<3>(predict).item<int>() <<
-					", prob: " << std::get<2>(predict).item<float>() << std::endl;*/
-			}
-			 
-			//std::cout << img_paths[i] << "\t";
-			//std::cout << "class: " << std::get<1>(predict).item<int>() /*classes[std::get<1>(predict).item<int>()]*/ <<
-			//	", prob: " << std::get<0>(predict).item<float>()/*std::get<0>(predict).item<float>()*/ << std::endl;
+		//	auto img_tensor = torch::from_blob(image_resized_merge.data, { 224, 224, 3 }, torch::kFloat32);
+		//	auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
+		//	img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });													//	auto img_tensor_ = torch::unsqueeze(img_tensor, 0);
+		//	//img_tensor_ = img_tensor_.permute({ 0, 3, 1, 2 });
+		//	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+		//	// Create a vector of inputs.
+		//	std::vector<torch::jit::IValue> inputs;
+		//	inputs.push_back(img_tensor_.to(device));
+		//	torch::Tensor prob = model.forward(inputs).toTensor();
+		//	torch::Tensor output = torch::softmax(prob, 1);
+		//	auto predict = torch::max(output, 1);
+		//	//cout << "cost time:" << clock() - start_t << endl;
+		//	 //std::cout << img_paths[i] << "\t";
+		//	//for (int  w = 0; w < 2; ++w)
+		//	{
+		//	//	int index = w * 2;
+		//	//	int po = w * 2 + 1;
+		//		std::cout << "class: " << std::get<1>(predict).item<int>() <<
+		//			", prob: " << std::get<0>(predict).item<float>() << std::endl;
+		//		/*std::cout << "class: " << std::get<3>(predict).item<int>() <<
+		//			", prob: " << std::get<2>(predict).item<float>() << std::endl;*/
+		//	}
+		//	 
+		//	//std::cout << img_paths[i] << "\t";
+		//	//std::cout << "class: " << std::get<1>(predict).item<int>() /*classes[std::get<1>(predict).item<int>()]*/ <<
+		//	//	", prob: " << std::get<0>(predict).item<float>()/*std::get<0>(predict).item<float>()*/ << std::endl;
 
-			/*if (std::get<1>(predict).item<int>() == 1) {
-				truth_count++;
-			}*/
-	    }
+		//	/*if (std::get<1>(predict).item<int>() == 1) {
+		//		truth_count++;
+		//	}*/
+	 //   }
 
-		//std::cout << truth_count << "/" << img_paths.size() << std::endl;
-		system("pause");
+		////std::cout << truth_count << "/" << img_paths.size() << std::endl;
+		//system("pause");
 
 	}
 

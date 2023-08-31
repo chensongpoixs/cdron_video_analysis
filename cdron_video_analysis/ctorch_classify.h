@@ -43,20 +43,40 @@ purpose:		log
  
 namespace chen
 {
+
+	struct cls_socre
+	{
+		int   index;
+		float   socre;
+		cls_socre()
+			: index(0)
+			, socre(0.0f) {}
+	};
+
 	class ctorch_classify
 	{
 	public:
-		ctorch_classify();
+		ctorch_classify(std::string model_path);
+		/*: m_device(torch::kCUDA)
+		, m_model(){}*/
 		virtual ~ctorch_classify();
 
 	public:
-		bool init();
+		//bool init(std::string pt);
 
+		cls_socre   classitfy(cv::Mat img);
+
+
+		cv::Mat pilResize(cv::Mat &img, int size);
+		cv::Mat pilCropCenter(cv::Mat &img, int output_size);
+		cv::Mat setNorm(cv::Mat &img);
+		cv::Mat setMean(cv::Mat &image_resized_float);
 		//void update();
 		void destroy();
 	private:
 
-
+		torch::Device		m_device;// (device_type);
+		torch::jit::script::Module m_model;
 	};
 
 

@@ -176,6 +176,7 @@
     <ClInclude Include="ctime_api.h" />
     <ClInclude Include="ctime_const.h" />
     <ClInclude Include="ctime_elapse.h" />
+    <ClInclude Include="ctorch_classify.h" />
     <ClInclude Include="cvideo_analysis.h" />
     <ClInclude Include="cvideo_analysis_mgr.h" />
     <ClInclude Include="cvideo_analysis_platform.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="cnet_type.cpp" />
     <ClCompile Include="crandom.cpp" />
     <ClCompile Include="ctime_api.cpp" />
+    <ClCompile Include="ctorch_classify.cpp" />
     <ClCompile Include="cvideo_analysis.cpp" />
     <ClCompile Include="cvideo_analysis_mgr.cpp" />
     <ClCompile Include="cvideo_logic.cpp" />

@@ -73,6 +73,9 @@
     <Filter Include="torch">
       <UniqueIdentifier>{790db737-a6f7-46d8-9073-6aea4bbb0dff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="classify">
+      <UniqueIdentifier>{3716ee48-326f-46de-8280-80fde63f187b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="cyolov_torch.h">
       <Filter>torch</Filter>
     </ClInclude>
+    <ClInclude Include="ctorch_classify.h">
+      <Filter>classify</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -436,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="cyolov_torch.cpp">
       <Filter>torch</Filter>
+    </ClCompile>
+    <ClCompile Include="ctorch_classify.cpp">
+      <Filter>classify</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
