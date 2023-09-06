@@ -38,6 +38,7 @@ purpose:		log
 #include "cnet_type.h"
 #include "cvideo_analysis_platform.h"
 #include "cyolov_onnxruntime.h"
+#include "ctorch_classify.h"
 #include "clicense_plate.h"
 namespace chen
 {
@@ -55,7 +56,10 @@ namespace chen
 		, m_skip_frame(0)
 		, m_car_analysis(0)
 		, m_license_plate()
-		, m_result_video_analysis(""){}
+		, m_result_video_analysis("")
+		, m_car_color_ptr(NULL)
+		, m_car_type_ptr(NULL)
+		{}
 		virtual ~cvideo_analysis() {}
 
 	public:
@@ -98,6 +102,8 @@ namespace chen
 		uint32						m_car_analysis;
 		clicense_plate				m_license_plate;
 		std::string					m_result_video_analysis;
+		ctorch_classify*			m_car_color_ptr;
+		ctorch_classify*			m_car_type_ptr;
 	};
 
 }

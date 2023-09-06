@@ -37,6 +37,8 @@ namespace chen {
 	bool cvideo_analysis::init()
 	{
 		m_license_plate.init("resource/models/r2_mobile");
+		m_car_color_ptr = new ctorch_classify("weights/car_color.torchscript");
+		m_car_type_ptr = new ctorch_classify("weights/car_type.torchscript");
 		return true;
 	}
 	bool cvideo_analysis::startup(const std::string & source)
@@ -198,7 +200,7 @@ namespace chen {
 						onnxruntimeresult = m_onnxruntime_ptr->detect(img, 0.4, 0.45);
 						result.push_back(onnxruntimeresult);
 					}
-
+					
 					_send_video_info(img, result, class_names, false);
 					result.clear();
 					auto  end = std::chrono::high_resolution_clock::now();
@@ -231,13 +233,14 @@ namespace chen {
 		if (!detections.empty())
 		{
 			Json::Value data;
-			Json::Value pedestrian_obj;;
+			/*Json::Value pedestrian_obj;;*/
 			Json::Value people_Obj;
-			Json::Value car_obj;
+			Json::Value Car_Obj;
+			/*Json::Value car_obj;
 			Json::Value var_obj;
 			Json::Value truck_obj;
 			Json::Value bus_obj;
-			Json::Value vehicle_info;
+			Json::Value vehicle_info;*/
 
 			//////////////
 			
@@ -245,7 +248,7 @@ namespace chen {
 
 
 
-
+			
 			Json::Value item;
 			for (const std::vector<CDetection> & pvec : detections)
 			{
@@ -267,7 +270,9 @@ namespace chen {
 					//# #  7：遮阳篷三轮车
 					//# #  8：公交车
 					std::string plate_code;
-					std::string car_color;
+					cls_socre car_color  ;
+					cls_socre car_type  ;
+					Json::Value vehicle_info;
 					if (m_car_analysis> 0&&(detection.class_idx == 3 || detection.class_idx == 4 || detection.class_idx == 5 || detection.class_idx == 8))
 					{
 						 
@@ -278,7 +283,18 @@ namespace chen {
 							//cv::waitKey(1);
 							//car_color = _recognize_vehicle_color(plate_img);
 							m_license_plate.recognition(plate_img, plate_code);
-							
+							vehicle_info["license_plate"] = plate_code;
+							if (m_car_color_ptr)
+							{
+								car_color = m_car_color_ptr->classitfy(plate_img);
+								vehicle_info["car_color"] = car_color.index;
+							}
+							if (m_car_type_ptr)
+							{
+								car_type = m_car_color_ptr->classitfy(plate_img);
+								vehicle_info["car_type"] = car_type.index;
+							}
+							item["vehicle_info"] = vehicle_info;
 						//cvReleaseImage
 
 					}
@@ -287,7 +303,7 @@ namespace chen {
 					{
 						cv::rectangle(img, detection.bbox, cv::Scalar(0, 0, 255), 2);
 						int conf = (int)std::round(detection.score * 100);
-						std::string s = class_names[ detection.class_idx] + " " +  " 0." + std::to_string(conf) + " color:" + car_color +"  : " + plate_code;
+						std::string s = class_names[ detection.class_idx] + " " +  " 0." + std::to_string(conf) + " color:" + std::to_string(car_color.index)+"  : " + plate_code;
 						
 						 
 						 
@@ -305,54 +321,17 @@ namespace chen {
 						cv::putText(img, s, cv::Point(detection.bbox.tl().x, detection.bbox.tl().y - 5),
 							font_face, font_scale, cv::Scalar(255, 255, 255), thickness);
 					}
-					if (detection.class_idx == 0)
-					{
-						  pedestrian_obj.append(item);
-						
-					}
-					else if (detection.class_idx == 1)
+					 
+					if (detection.class_idx == 1 || detection.class_idx == 0)
 					{
 						  people_Obj.append(item);
 						
 					}
-					else if (detection.class_idx == 3)
+					else if (detection.class_idx == 3 || detection.class_idx == 4 || detection.class_idx == 5 || detection.class_idx == 8)
 					{
-						if (!plate_code.empty())
-						{
-							vehicle_info["license_plate"] = plate_code;
-							item["vehicle_info"] = vehicle_info;
-						}
-						 car_obj.append(item);
-						 
+						Car_Obj.append(item);
 					}
-					else if (detection.class_idx == 4)
-					{ 
-						if (!plate_code.empty())
-						{
-							vehicle_info["license_plate"] = plate_code;
-							item["vehicle_info"] = vehicle_info;
-						}
-						  var_obj.append(item);
-						 
-					}
-					else if (detection.class_idx == 5)
-					{ 
-						if (!plate_code.empty())
-						{
-							vehicle_info["license_plate"] = plate_code;
-							item["vehicle_info"] = vehicle_info;
-						}
-						 truck_obj.append(item);
-					}
-					else if (detection.class_idx == 8)
-					{
-						if (!plate_code.empty())
-						{
-							vehicle_info["license_plate"] = plate_code;
-							item["vehicle_info"] = vehicle_info;
-						}
-						  bus_obj.append(item);
-					}
+			 
 					
 				}
 			}
@@ -360,59 +339,26 @@ namespace chen {
 
 
 			
-			if (!pedestrian_obj.empty())
-			{
-				Json::Value class_object;
-				class_object["class"] = 0;
-				class_object["class_data"] = pedestrian_obj;
-				data.append(class_object);
-			}
+		 
 			
 			 
 			if (!people_Obj.empty())
 			{
 				Json::Value class_object;
-				class_object["class"] = 1;
+				class_object["class"] = 0;
 				class_object["class_data"] = people_Obj;
 				data.append(class_object);
 			}
-
-			if (!car_obj.empty())
+			if (!Car_Obj.empty())
 			{
 				Json::Value class_object;
-				class_object["class"] = 3;
-				class_object["class_data"] = car_obj;
-				data.append(class_object);
-			}
-
-			if (!var_obj.empty())
-			{
-				Json::Value class_object;
-				class_object["class"] = 4;
-				class_object["class_data"] = var_obj;
-				data.append(class_object);
-			}
-
-
-			if (!truck_obj.empty())
-			{
-				Json::Value class_object;
-				class_object["class"] = 5;
-				class_object["class_data"] = truck_obj;
-				data.append(class_object);
-			}
-
-
-			if (!bus_obj.empty())
-			{
-				Json::Value class_object;
-				class_object["class"] = 8;
-				class_object["class_data"] = bus_obj;
+				class_object["class"] = 1;
+				class_object["class_data"] = Car_Obj;
 				data.append(class_object);
 			}
 			if (!data.empty())
 			{
-				s_mqtt_client_mgr.publish("video_analysis/result/" +m_result_video_analysis, data.toStyledString());
+				s_mqtt_client_mgr.publish("video_analysis/" + m_result_video_analysis, data.toStyledString());
 			}
 			//NORMAL_EX_LOG("json = %s\n", data.toStyledString().c_str());
 		} 

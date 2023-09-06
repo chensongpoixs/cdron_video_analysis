@@ -59,34 +59,34 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
     std::vector<torch::jit::IValue> inputs;
     inputs.emplace_back(tensor_img);
 
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+   // auto end = std::chrono::high_resolution_clock::now();
+   // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     // It should be known that it takes longer time at first time
-    std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+  //  std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
 
     /*** Inference ***/
     // TODO: add synchronize point
-    start = std::chrono::high_resolution_clock::now();
+  //  start = std::chrono::high_resolution_clock::now();
 	//attempt_load
     // inference
     torch::jit::IValue output = module_.forward(inputs);
 	//module_.warmup();
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+   // end = std::chrono::high_resolution_clock::now();
+   // duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     // It should be known that it takes longer time at first time
-    std::cout << "inference takes : " << duration.count() << " ms" << std::endl;
+    //std::cout << "inference takes : " << duration.count() << " ms" << std::endl;
 
     /*** Post-process ***/
 
-   start = std::chrono::high_resolution_clock::now();
+ //  start = std::chrono::high_resolution_clock::now();
 	const at::Tensor& detections = output.toTuple()->elements()[0].toTensor();
 
     // result: n * 7
     // batch index(0), top-left x/y (1,2), bottom-right x/y (3,4), score(5), class id(6)
 	std::vector<std::vector<CDetection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
 
-	  end = std::chrono::high_resolution_clock::now();
-	  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	 auto end = std::chrono::high_resolution_clock::now();
+	auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     // It should be known that it takes longer time at first time
     std::cout << "post-process takes : " << duration.count() << " ms" << std::endl;
 
@@ -127,7 +127,7 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
     constexpr int item_attr_size = 5;
     int batch_size = detections.size(0);
 	using namespace chen;
-	NORMAL_EX_LOG("batch_size = %u", batch_size);
+	//NORMAL_EX_LOG("batch_size = %u", batch_size);
     // number of classes, e.g. 80 for coco dataset
     auto num_classes = detections.size(2) - item_attr_size;
 
@@ -136,30 +136,30 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
 
     std::vector<std::vector<CDetection>> output;
     output.reserve(batch_size);
-	auto end = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	//auto end = std::chrono::high_resolution_clock::now();
+	//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	// It should be known that it takes longer time at first time
 	//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-	NORMAL_EX_LOG("===> init --> %u ms", duration.count());
-	start = end;
+	//NORMAL_EX_LOG("===> init --> %u ms", duration.count());
+	//start = end;
     // iterating all images in the batch
     for (int batch_i = 0; batch_i < batch_size; batch_i++) {
         // apply constrains to get filtered detections for current image
 		//torch::from_numpy(im).to(model.device)
 		at::Tensor det1 = torch::masked_select(detections[batch_i], conf_mask[batch_i]);
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		//end = std::chrono::high_resolution_clock::now();
+		//duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> ttorch::masked_select  --> %u ms", duration.count());
-		start = end;
+	//	NORMAL_EX_LOG("===> ttorch::masked_select  --> %u ms", duration.count());
+		//start = end;
 		at::Tensor det = det1.view({ -1, num_classes + item_attr_size });
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		//end = std::chrono::high_resolution_clock::now();
+		//duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
-		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> ttorch::masked_select view --> %u ms", duration.count());
-		start = end;
+	///	//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
+	//	NORMAL_EX_LOG("===> ttorch::masked_select view --> %u ms", duration.count());
+		//start = end;
         // if none detections remain then skip and start to process next image
         if (0 == det.size(0)) {
             continue;
@@ -173,12 +173,12 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
 
         // [best class only] get the max classes score at each result (e.g. elements 5-84)
         std::tuple<torch::Tensor, torch::Tensor> max_classes = torch::max(det.slice(1, item_attr_size, item_attr_size + num_classes), 1);
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		//end = std::chrono::high_resolution_clock::now();
+	//	duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> torch::max  --> %u ms", duration.count());
-		start = end;
+	//	NORMAL_EX_LOG("===> torch::max  --> %u ms", duration.count());
+		//start = end;
         // class score
         auto max_conf_score = std::get<0>(max_classes);
         // index
@@ -205,23 +205,23 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
 
         // use accessor to access tensor elements efficiently
         Tensor2Detection(offset_boxes_cpu.accessor<float,2>(), det_cpu_array, offset_box_vec, score_vec);
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	//	end = std::chrono::high_resolution_clock::now();
+	//	duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> Tensor2Detection  --> %u ms", duration.count());
-		start = end;
+	//	NORMAL_EX_LOG("===> Tensor2Detection  --> %u ms", duration.count());
+	//	start = end;
         // run NMS
         std::vector<int> nms_indices;
         cv::dnn::NMSBoxes(offset_box_vec, score_vec, conf_thres, iou_thres, nms_indices);
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	//	end = std::chrono::high_resolution_clock::now();
+	//	duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> nms_indices start  --> %u ms", duration.count());
-		start = end;
+	//	NORMAL_EX_LOG("===> nms_indices start  --> %u ms", duration.count());
+		//start = end;
         std::vector<CDetection> det_vec;
-		NORMAL_EX_LOG("nms_indices = %u", nms_indices.size());
+	//	NORMAL_EX_LOG("nms_indices = %u", nms_indices.size());
         for (int index : nms_indices)
 		{
 			CDetection t;
@@ -233,11 +233,11 @@ std::vector<std::vector<CDetection>> Detector::PostProcessing(const torch::Tenso
             t.class_idx = det_cpu_array[index][Det::class_idx];
             det_vec.emplace_back(t);
         }
-		end = std::chrono::high_resolution_clock::now();
-		duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		//end = std::chrono::high_resolution_clock::now();
+		//duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		// It should be known that it takes longer time at first time
 		//std::cout << "pre-process takes : " << duration.count() << " ms" << std::endl;
-		NORMAL_EX_LOG("===> nms_indices end  --> %u ms", duration.count());
+	//	NORMAL_EX_LOG("===> nms_indices end  --> %u ms", duration.count());
         ScaleCoordinates(det_vec, pad_w, pad_h, scale, img_shape);
 
         // save final detection for the current image
