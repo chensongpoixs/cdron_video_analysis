@@ -34,6 +34,8 @@ purpose:		gateway
 #include "cvideo_logic.h"
 #include "cmqtt_mgr.h"
 #include "cvideo_analysis_mgr.h"
+#include "cweb_http_api_mgr.h"
+#include "chttp_queue_mgr.h"
 namespace chen {
 	cdron_video_analysls g_cdron_video_analysls;
 
@@ -64,7 +66,14 @@ namespace chen {
 		ctime_base_api::set_time_adjust(g_cfg.get_int32(ECI_TimeAdjust));
 
 
-
+		SYSTEM_LOG("Web Http Server API init ...");
+		if (!g_web_http_api_mgr.init())
+		{
+			return false;
+		}
+		SYSTEM_LOG("Web Http Server API startup ...");
+		g_web_http_api_mgr.startup();
+		SYSTEM_LOG("Web Http Server API startup OK ...");
 
 		// MQtt init
 		SYSTEM_LOG("Mqtt init");
@@ -105,6 +114,7 @@ namespace chen {
 			uDelta += time_elapse.get_elapse();
 	 
 			g_video_logic.update(uDelta);
+			g_http_queue_mgr.update(uDelta);
 			uDelta = time_elapse.get_elapse();
 
 			if (uDelta < TICK_TIME)
@@ -126,6 +136,8 @@ namespace chen {
 		s_mqtt_client_mgr.stop();
 		s_mqtt_client_mgr.destroy();
 		SYSTEM_LOG("mqtt destroy OK !!!");
+		g_web_http_api_mgr.destroy();
+		SYSTEM_LOG("Web Server Http  destroy ok !!!");
 		g_cfg.destroy();
 		SYSTEM_LOG("cfg destroy OK !!!");
 		CLOG::destroy();;

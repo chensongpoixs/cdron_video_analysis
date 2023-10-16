@@ -104,6 +104,10 @@ namespace chen {
 								{
 									video_analysis_ptr->set_car_analysis(car_analysis);
 								}
+								if (!result_video_analysis.empty())
+								{
+									video_analysis_ptr->set_result_video_analysis(result_video_analysis);
+								}
 							}
 							else
 							{

@@ -26,6 +26,7 @@ namespace chen {
 		m_model = torch::jit::load(pt);;
 		m_model.to(m_device);
 		m_model.eval();
+		
 
 	}
 	ctorch_classify::~ctorch_classify()

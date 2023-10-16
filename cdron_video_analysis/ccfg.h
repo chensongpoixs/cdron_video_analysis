@@ -38,7 +38,8 @@ namespace chen {
 		ECI_MqttPasswd,
 		ECI_LogLevel,
 		ECI_OpencvShow,
-		 
+		ECI_WebHttpWanIP,
+		ECI_WebHttpWanPort,
 		ECI_Max,
 	};
 	class ccfg : public cconfig

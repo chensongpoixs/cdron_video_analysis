@@ -76,6 +76,12 @@
     <Filter Include="classify">
       <UniqueIdentifier>{3716ee48-326f-46de-8280-80fde63f187b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="http">
+      <UniqueIdentifier>{3a360172-12ed-4290-a729-1b06a8a2f778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="proxy">
+      <UniqueIdentifier>{c585f478-7dcf-4f94-8580-fa8a2239001e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -303,6 +309,54 @@
     <ClInclude Include="ctorch_classify.h">
       <Filter>classify</Filter>
     </ClInclude>
+    <ClInclude Include="asio_compatibility.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cconstructor_magic.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="chttp_queue_mgr.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="clocation.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cmessage_handler.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cproxy.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cstringize_macros.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_interface.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_mgr.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_proxy.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="mutex.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="server_http.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="status_code.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.hpp">
+      <Filter>http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -445,6 +499,24 @@
     </ClCompile>
     <ClCompile Include="ctorch_classify.cpp">
       <Filter>classify</Filter>
+    </ClCompile>
+    <ClCompile Include="chttp_queue_mgr.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="clocation.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="cmessage_handler.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="cproxy.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="cweb_http_api_mgr.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="cweb_http_api_proxy.cpp">
+      <Filter>http</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

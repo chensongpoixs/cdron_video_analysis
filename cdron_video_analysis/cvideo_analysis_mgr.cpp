@@ -70,5 +70,17 @@ namespace chen {
 		NORMAL_EX_LOG("del video analysis [source = %s] OK !!!", source.c_str());
 		return true;
 	}
-
+	void			cvideo_analysis_mgr::build_video_analysis_infos(std::vector< cvideo_analysis_info>& video_infos)
+	{
+		for (const std::pair<const std::string, cvideo_analysis*>& pi : m_all_video_map)
+		{
+			cvideo_analysis_info video_info;
+			video_info.source = pi.first;
+			video_info.action = pi.second->get_action();
+			video_info.car_analysis = pi.second->get_car_analysis();
+			video_info.result_video_analysis = pi.second->get_result_video_analysis();
+			video_info.video_skip_frame = pi.second->get_skip_frame();
+			video_infos.push_back(video_info);
+		}
+	}
 }

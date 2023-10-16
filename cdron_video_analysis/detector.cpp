@@ -88,8 +88,11 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
 	 auto end = std::chrono::high_resolution_clock::now();
 	auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     // It should be known that it takes longer time at first time
-    std::cout << "post-process takes : " << duration.count() << " ms" << std::endl;
+    if (duration.count() > 25)
+    {
+        std::cout << "post-process takes : " << duration.count() << " ms" << std::endl;
 
+    }
     return result;
 }
 

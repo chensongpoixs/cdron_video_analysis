@@ -49,7 +49,7 @@ namespace chen
 	public:
 
 		bool init();
-		void update(uint32 uDelta);
+		void update(uint32_t uDelta);
 		void destroy();
 	
 	protected:

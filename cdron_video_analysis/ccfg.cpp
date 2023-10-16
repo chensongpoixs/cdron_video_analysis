@@ -50,6 +50,8 @@ namespace chen {
 
 		set_uint32(ECI_LogLevel, "log_level", ELogLevel_Num);
 		set_uint32(ECI_OpencvShow, "opencv_show", 0);
+		set_string(ECI_WebHttpWanIP, "web_http_wan_ip", "0.0.0.0");
+		set_uint32(ECI_WebHttpWanPort, "ECI_WebHttpWanPort", 9200);
 		
  
 #if _DEBUG

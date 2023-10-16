@@ -76,8 +76,8 @@
     <IntDir>$(ProjectDir)..\vsout\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(C_INCLUDE)\onnxruntime\include;$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(C_INCLUDE)\boost\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(C_INCLUDE)\json\lib\x64\release;$(C_INCLUDE)\opencv\x64\vc16\lib;$(C_INCLUDE)\onnxruntime\lib;$(C_INCLUDE)\libtorch\lib;$(C_INCLUDE)\MNN\lib\x64\Release\Static\MD;$(C_INCLUDE)\libhv\lib;$(C_INCLUDE)\boost\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(C_INCLUDE)\onnxruntime\include;$(C_INCLUDE)\json\include;$(C_INCLUDE)\libhv\include;$(C_INCLUDE)\opencv\include;$(C_INCLUDE)\MNN\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include;C:\Program Files\NVIDIA Corporation\NvToolsExt\include;$(C_INCLUDE)\boost\include;$(C_INCLUDE)\openssl_1.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(C_INCLUDE)\json\lib\x64\release;$(C_INCLUDE)\opencv\x64\vc16\lib;$(C_INCLUDE)\onnxruntime\lib;$(C_INCLUDE)\libtorch\lib;$(C_INCLUDE)\MNN\lib\x64\Release\Static\MD;$(C_INCLUDE)\libhv\lib;$(C_INCLUDE)\boost\lib\x64;$(C_INCLUDE)\openssl_1.1.0\lib\x64\release;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\vsout\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
@@ -147,19 +147,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="asio_compatibility.hpp" />
     <ClInclude Include="casync_log.h" />
     <ClInclude Include="ccfg.h" />
     <ClInclude Include="ccmd_param.h" />
     <ClInclude Include="cconfig.h" />
+    <ClInclude Include="cconstructor_magic.h" />
     <ClInclude Include="cdigit2str.h" />
     <ClInclude Include="cdron_video_analysls.h" />
     <ClInclude Include="cgpu_detector.h" />
+    <ClInclude Include="chttp_queue_mgr.h" />
     <ClInclude Include="clib_util.h" />
     <ClInclude Include="clicense_plate.h" />
+    <ClInclude Include="clocation.h" />
     <ClInclude Include="clog.h" />
     <ClInclude Include="clog_color.h" />
     <ClInclude Include="clog_define.h" />
     <ClInclude Include="cmem_pool.h" />
+    <ClInclude Include="cmessage_handler.h" />
     <ClInclude Include="cmqtt_mgr.h" />
     <ClInclude Include="cmsg_buffer.h" />
     <ClInclude Include="cnet_define.h" />
@@ -171,8 +176,11 @@
     <ClInclude Include="cnet_session.h" />
     <ClInclude Include="cnet_type.h" />
     <ClInclude Include="cnoncopyable.h" />
+    <ClInclude Include="cproxy.h" />
     <ClInclude Include="crandom.h" />
+    <ClInclude Include="crypto.hpp" />
     <ClInclude Include="csingleton.h" />
+    <ClInclude Include="cstringize_macros.h" />
     <ClInclude Include="ctime_api.h" />
     <ClInclude Include="ctime_const.h" />
     <ClInclude Include="ctime_elapse.h" />
@@ -181,11 +189,15 @@
     <ClInclude Include="cvideo_analysis_mgr.h" />
     <ClInclude Include="cvideo_analysis_platform.h" />
     <ClInclude Include="cvideo_logic.h" />
+    <ClInclude Include="cweb_http_api_interface.h" />
+    <ClInclude Include="cweb_http_api_mgr.h" />
+    <ClInclude Include="cweb_http_api_proxy.h" />
     <ClInclude Include="cxxopts.h" />
     <ClInclude Include="cyolov_torch.h" />
     <ClInclude Include="cyolov_dnn.h" />
     <ClInclude Include="cyolov_onnxruntime.h" />
     <ClInclude Include="detector.h" />
+    <ClInclude Include="event.h" />
     <ClInclude Include="HyperLPR\basic_types.h" />
     <ClInclude Include="HyperLPR\buffer_module\all.h" />
     <ClInclude Include="HyperLPR\buffer_module\camera_buffer.h" />
@@ -221,6 +233,10 @@
     <ClInclude Include="HyperLPR\utils.h" />
     <ClInclude Include="HyperLPR\version.h" />
     <ClInclude Include="inference.h" />
+    <ClInclude Include="mutex.hpp" />
+    <ClInclude Include="server_http.hpp" />
+    <ClInclude Include="status_code.hpp" />
+    <ClInclude Include="utility.hpp" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -231,10 +247,13 @@
     <ClCompile Include="cdigit2str.cpp" />
     <ClCompile Include="cdron_video_analysls.cpp" />
     <ClCompile Include="cgpu_detector.cpp" />
+    <ClCompile Include="chttp_queue_mgr.cpp" />
     <ClCompile Include="clicense_plate.cpp" />
+    <ClCompile Include="clocation.cpp" />
     <ClCompile Include="clog.cpp" />
     <ClCompile Include="clog_color.cpp" />
     <ClCompile Include="cmem_pool.cpp" />
+    <ClCompile Include="cmessage_handler.cpp" />
     <ClCompile Include="cmqtt_mgr.cpp" />
     <ClCompile Include="cmsg_buffer.cpp" />
     <ClCompile Include="cnet_mgr.cpp" />
@@ -243,12 +262,15 @@
     <ClCompile Include="cnet_msg_reserve.cpp" />
     <ClCompile Include="cnet_session.cpp" />
     <ClCompile Include="cnet_type.cpp" />
+    <ClCompile Include="cproxy.cpp" />
     <ClCompile Include="crandom.cpp" />
     <ClCompile Include="ctime_api.cpp" />
     <ClCompile Include="ctorch_classify.cpp" />
     <ClCompile Include="cvideo_analysis.cpp" />
     <ClCompile Include="cvideo_analysis_mgr.cpp" />
     <ClCompile Include="cvideo_logic.cpp" />
+    <ClCompile Include="cweb_http_api_mgr.cpp" />
+    <ClCompile Include="cweb_http_api_proxy.cpp" />
     <ClCompile Include="cyolov_torch.cpp" />
     <ClCompile Include="cyolov_dnn.cpp" />
     <ClCompile Include="cyolov_onnxruntime.cpp" />

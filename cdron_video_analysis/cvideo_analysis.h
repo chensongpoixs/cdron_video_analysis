@@ -42,6 +42,21 @@ purpose:		log
 #include "clicense_plate.h"
 namespace chen
 {
+	struct cvideo_analysis_info
+	{
+		std::string  source;
+		uint32_t		 action;
+		uint32_t		 video_skip_frame;
+		uint32_t       car_analysis;
+		std::string  result_video_analysis;
+		cvideo_analysis_info()
+			: source("")
+			, action(1)
+			, video_skip_frame(0)
+			, car_analysis(0)
+			, result_video_analysis("") {}
+
+	};
 	class cvideo_analysis
 	{
 	public:
@@ -50,15 +65,17 @@ namespace chen
 		, m_source_path("")
 		, m_stoped(true)
 		, m_detector_ptr(NULL)
+		, m_onnxruntime_ptr(NULL)
 		, class_names()
 		, m_video_cap_ptr(NULL)
 		, m_video_index(-1)
 		, m_skip_frame(0)
 		, m_car_analysis(0)
-		, m_license_plate()
+	//	, m_license_plate()
 		, m_result_video_analysis("")
-		, m_car_color_ptr(NULL)
-		, m_car_type_ptr(NULL)
+		//, m_car_color_ptr(NULL)
+		//, m_car_type_ptr(NULL)
+		, m_queue()
 		{}
 		virtual ~cvideo_analysis() {}
 
@@ -75,17 +92,27 @@ namespace chen
 
 		void set_skip_frame(uint32 count);
 		void set_car_analysis(uint32 analysis);
-
+		void set_result_video_analysis(const std::string& result_video_analysis);
+		uint32_t get_action() const { return m_stoped; }
+		uint32_t get_skip_frame() const { return m_skip_frame; }
+		uint32_t get_car_analysis() const { return m_car_analysis; }
+		std::string get_result_video_analysis() const {
+			return m_result_video_analysis
+				;
+		}
 	private:
 
 		void _work_pthread();
 
+
+		void _work_decode_thread();
 
 		void _send_video_info(cv::Mat& img,
 			const std::vector<std::vector<CDetection>>& detections,
 			const std::vector<std::string>& class_names,
 			bool label = true);
 		std::string _recognize_vehicle_color(const cv::Mat& img);
+		
 	protected:
 	private:
 		EVideoAnalysisPlatformType	m_video_analysis_type;
@@ -100,10 +127,13 @@ namespace chen
 		std::thread					m_thread;
 		uint32						m_skip_frame;
 		uint32						m_car_analysis;
-		clicense_plate				m_license_plate;
+		//clicense_plate				m_license_plate;
 		std::string					m_result_video_analysis;
-		ctorch_classify*			m_car_color_ptr;
-		ctorch_classify*			m_car_type_ptr;
+		//ctorch_classify*			m_car_color_ptr;
+		//ctorch_classify*			m_car_type_ptr;
+		std::thread					m_decode_thread;
+		std::list< cv::Mat>			m_queue;
+		std::mutex					m_queue_lock;
 	};
 
 }

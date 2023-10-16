@@ -34,6 +34,7 @@ purpose:		log
 #include "utils.h"
 #include <hv/mqtt_client.h>
 #include "csingleton.h"
+#include "cweb_http_api_proxy.h"
 #include "cvideo_analysis.h"
 #include <unordered_map>
 namespace chen
@@ -54,6 +55,8 @@ namespace chen
 	public:
 		cvideo_analysis*  get_video_analysis(const std::string& source);
 		bool             del_video_analysis(const std::string& source);
+
+		void			build_video_analysis_infos(std::vector< cvideo_analysis_info>& video_infos);
 	protected:
 	private:
 		VIDEO_ANALYSIS_MAP								m_all_video_map;

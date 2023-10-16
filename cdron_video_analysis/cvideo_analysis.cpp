@@ -36,9 +36,9 @@ namespace chen {
 
 	bool cvideo_analysis::init()
 	{
-		m_license_plate.init("resource/models/r2_mobile");
-		m_car_color_ptr = new ctorch_classify("weights/car_color.torchscript");
-		m_car_type_ptr = new ctorch_classify("weights/car_type.torchscript");
+		//m_license_plate.init("resource/models/r2_mobile");
+		//m_car_color_ptr = new ctorch_classify("weights/car_color.torchscript");
+		//m_car_type_ptr = new ctorch_classify("weights/car_type.torchscript");
 		return true;
 	}
 	bool cvideo_analysis::startup(const std::string & source)
@@ -101,10 +101,11 @@ namespace chen {
 			WARNING_EX_LOG("Can't ot open [source = %s]", source.c_str());
 			return false;
 		}
-
+		m_source_path = source;
 		//const int videoBaseIndex = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_STREAM);
 		m_video_index = (int)m_video_cap_ptr->get(cv::CAP_PROP_VIDEO_TOTAL_CHANNELS);
 		m_stoped = false;
+		m_decode_thread = std::thread(&cvideo_analysis::_work_decode_thread, this);
 		m_thread = std::thread(&cvideo_analysis::_work_pthread, this);
 
 		return true;
@@ -119,12 +120,19 @@ namespace chen {
 	}
 	void cvideo_analysis::destroy()
 	{
+		NORMAL_EX_LOG("[source = %s] exit !!!", m_source_path.c_str());
 		m_stoped = true;
 		if (m_thread.joinable())
 		{
 			m_thread.join();
 			
 		}
+		NORMAL_EX_LOG("[source = %s] exit !!!", m_source_path.c_str());
+		if (m_decode_thread.joinable())
+		{
+			m_decode_thread.join();
+		}
+		m_queue.clear();
 		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
 		if (m_detector_ptr)
 		{
@@ -132,12 +140,14 @@ namespace chen {
 			m_detector_ptr = NULL;
 			NORMAL_EX_LOG("[source = %s]   totch delete !!!", m_source_path.c_str());
 		}
+		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
 		if (m_onnxruntime_ptr)
 		{
 			delete m_onnxruntime_ptr;
 			m_onnxruntime_ptr = NULL;
 			NORMAL_EX_LOG("[source = %s] onnxruntime delete !!!", m_source_path.c_str());
 		}
+		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
 		if (m_video_cap_ptr)
 		{
 			m_video_cap_ptr->release();
@@ -145,7 +155,8 @@ namespace chen {
 			m_video_cap_ptr = NULL;
 			NORMAL_EX_LOG("[source = %s]  video cap delete OK !!!", m_source_path.c_str());
 		}
-		m_license_plate.destroy();
+		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
+		//m_license_plate.destroy();
 		NORMAL_EX_LOG("[source = %s] destroy !!!", m_source_path.c_str());
 		class_names.clear();
 	}
@@ -163,27 +174,60 @@ namespace chen {
 	{
 		m_car_analysis = analysis;
 	}
+	void cvideo_analysis::set_result_video_analysis(const std::string& result_video_analysis)
+	{
+		m_result_video_analysis =  "video_analysis/" + result_video_analysis;
+	}
 
 	void cvideo_analysis::_work_pthread()
 	{
-		bool one = true;
-		cv::Mat img;
+		
+		std::chrono::steady_clock::time_point cur_time_ms;
+		std::chrono::steady_clock::time_point pre_time = std::chrono::steady_clock::now();
+		std::chrono::steady_clock::duration dur;
+		std::chrono::milliseconds ms;
+		uint32_t elapse = 0;
+		uint32_t total_ms = 100 / 30;
 		std::vector<std::vector<CDetection>> result;
 		std::vector<CDetection> onnxruntimeresult;
-		uint32 skip_frame_count = 0;
+		cv::Mat img;
+		bool one = true;
+		bool data = false;
 		//g_license_plate.init("D:/Work/cartificial_intelligence/HyperLPR/resource/models/r2_mobile");
 		while (!m_stoped)
 		{
-			auto start = std::chrono::high_resolution_clock::now();
-			if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
+			pre_time = std::chrono::high_resolution_clock::now();
+			//if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
 			{
-
+				{
+					std::lock_guard<std::mutex> lock(m_queue_lock);
+					//m_queue_lock.push(img.clone());
+					if (!m_queue.empty())
+					{
+						img = m_queue.front();
+						m_queue.pop_front();
+						data = true;
+					}
+					else
+					{
+						cur_time_ms = std::chrono::steady_clock::now();
+						dur = cur_time_ms - pre_time;
+						ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+						elapse = static_cast<uint32_t>(ms.count());
+						if (elapse < total_ms && !m_stoped)
+						{
+							std::this_thread::sleep_for(std::chrono::milliseconds(total_ms - elapse));
+						}
+						data = false;
+					}
+				}
 				 
 				;
 				
-				if (++skip_frame_count > m_skip_frame)
+				//if (++skip_frame_count > m_skip_frame)
+				if (data && !m_stoped)
 				{
-					skip_frame_count = 0;
+				//	skip_frame_count = 0;
 					if (one && m_detector_ptr)
 					{
 						//cv::cuda::GpuMat temp_img = cv::cuda::GpuMat(d_frame.rows, d_frame.cols, CV_32FC3);
@@ -204,10 +248,14 @@ namespace chen {
 					_send_video_info(img, result, class_names, false);
 					result.clear();
 					auto  end = std::chrono::high_resolution_clock::now();
-					auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+					auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - pre_time);
 					// It should be known that it takes longer time at first time
 					//std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
-					NORMAL_EX_LOG("[source=%s] post-process takes : %u ms", m_source_path.c_str(), duration.count());
+					if (duration.count() > 25)
+					{
+						NORMAL_EX_LOG("[source=%s] post-process takes : %u ms", m_source_path.c_str(), duration.count());
+					}
+					
 					using namespace chen;
 					if (g_cfg.get_uint32(ECI_OpencvShow))
 					{
@@ -221,9 +269,53 @@ namespace chen {
 			}
 
 		}
+
+		NORMAL_EX_LOG("_work_pthread  exit !!!");
 		//cv::destroyAllWindows();
 	}
 
+
+
+	void cvideo_analysis::_work_decode_thread()
+	{
+		bool one = true;
+		cv::Mat img;
+		uint32 skip_frame_count = 0;
+
+		std::chrono::steady_clock::time_point cur_time_ms;
+		std::chrono::steady_clock::time_point pre_time = std::chrono::steady_clock::now();
+		std::chrono::steady_clock::duration dur;
+		std::chrono::milliseconds ms;
+		uint32_t elapse = 0;
+		uint32_t total_ms = 100 / 30;
+		
+		while (!m_stoped)
+		{
+			 pre_time = std::chrono::high_resolution_clock::now();
+			if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
+			{ 
+				if (++skip_frame_count > m_skip_frame)
+				{
+					skip_frame_count = 0; 
+					{
+						std::lock_guard<std::mutex> lock(m_queue_lock);
+						m_queue.push_back(img.clone());
+						
+					}
+				}
+
+			}
+			cur_time_ms = std::chrono::steady_clock::now();
+			dur = cur_time_ms - pre_time;
+			ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+			elapse = static_cast<uint32_t>(ms.count());
+			if (elapse < total_ms && !m_stoped)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(total_ms - elapse));
+			}
+		}
+		NORMAL_EX_LOG("_work_decode_thread  exit !!!");
+	}
 	void cvideo_analysis::_send_video_info(cv::Mat& img,
 		const std::vector<std::vector<CDetection>>& detections,
 		const std::vector<std::string>& class_names,
@@ -269,6 +361,7 @@ namespace chen {
 					//# #  6:三轮车
 					//# #  7：遮阳篷三轮车
 					//# #  8：公交车
+#if 0
 					std::string plate_code;
 					cls_socre car_color  ;
 					cls_socre car_type  ;
@@ -284,6 +377,7 @@ namespace chen {
 							//car_color = _recognize_vehicle_color(plate_img);
 							m_license_plate.recognition(plate_img, plate_code);
 							vehicle_info["license_plate"] = plate_code;
+
 							if (m_car_color_ptr)
 							{
 								car_color = m_car_color_ptr->classitfy(plate_img);
@@ -294,16 +388,17 @@ namespace chen {
 								car_type = m_car_color_ptr->classitfy(plate_img);
 								vehicle_info["car_type"] = car_type.index;
 							}
+
 							item["vehicle_info"] = vehicle_info;
 						//cvReleaseImage
 
 					}
-
+#endif 
 					if (g_cfg.get_uint32(ECI_OpencvShow))
 					{
 						cv::rectangle(img, detection.bbox, cv::Scalar(0, 0, 255), 2);
 						int conf = (int)std::round(detection.score * 100);
-						std::string s = class_names[ detection.class_idx] + " " +  " 0." + std::to_string(conf) + " color:" + std::to_string(car_color.index)+"  : " + plate_code;
+						std::string s = class_names[detection.class_idx] + " " + " 0." + std::to_string(conf);// +" color:" + std::to_string(car_color.index) + "  : " + plate_code;
 						
 						 
 						 
@@ -358,7 +453,7 @@ namespace chen {
 			}
 			if (!data.empty())
 			{
-				s_mqtt_client_mgr.publish("video_analysis/" + m_result_video_analysis, data.toStyledString());
+				s_mqtt_client_mgr.publish( m_result_video_analysis, data.toStyledString());
 			}
 			//NORMAL_EX_LOG("json = %s\n", data.toStyledString().c_str());
 		} 
