@@ -111,6 +111,11 @@ namespace chen
 		 * @param iouThres 非极大值抑制中的 iouThresh
 		 */
 		cyolov_torch(std::string ptFile, std::string version = "v8", std::string devices = "cpu", bool isHalf = false, int height = 640, int width = 640, float confThres = 0.25, float iouThres = 0.45);
+		
+		
+		
+		void destroy();
+		
 		/**
 		 * 预测函数
 		 * @param data 需要预测的数据格式 (batch, rgb, height, width)
@@ -127,6 +132,9 @@ namespace chen
 		 * @param img 需要预测的图片
 		 */
 		std::vector<torch::Tensor> prediction(cv::Mat img);
+
+
+		std::vector<std::vector<CDetection>> result(torch::Tensor rectangle);
 		/**
 		 * 预测函数
 		 * @param imgs 需要预测的图片集合

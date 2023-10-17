@@ -1,5 +1,6 @@
 #include "detector.h"
 #include "clog.h"
+ 
 
 Detector::Detector(const std::string& model_path, const torch::DeviceType& device_type) : device_(device_type) {
     try {
@@ -8,7 +9,10 @@ Detector::Detector(const std::string& model_path, const torch::DeviceType& devic
     }
     catch (const c10::Error& e) {
         std::cerr << "Error loading the model [model_path = "<< model_path <<"][e = "<<e.what()<<"]!\n";
-        std::exit(EXIT_FAILURE);
+       // std::exit(EXIT_FAILURE);
+        using namespace chen;
+        WARNING_EX_LOG("Error loading the model [model_path =%s][e = %s] failed !!!", model_path.c_str(), e.what());
+        return;
     }
 
     half_ = (device_ != torch::kCPU);
@@ -83,7 +87,7 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
 
     // result: n * 7
     // batch index(0), top-left x/y (1,2), bottom-right x/y (3,4), score(5), class id(6)
-	std::vector<std::vector<CDetection>> result = PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
+    std::vector<std::vector<CDetection>> result =  PostProcessing(detections, pad_w, pad_h, scale, img.size(), conf_threshold, iou_threshold);
 
 	 auto end = std::chrono::high_resolution_clock::now();
 	auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -93,6 +97,8 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
         std::cout << "post-process takes : " << duration.count() << " ms" << std::endl;
 
     }
+    img_input.release(); 
+    img_input.deallocate();
     return result;
 }
 

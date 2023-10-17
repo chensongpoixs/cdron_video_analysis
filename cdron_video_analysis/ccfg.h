@@ -40,6 +40,8 @@ namespace chen {
 		ECI_OpencvShow,
 		ECI_WebHttpWanIP,
 		ECI_WebHttpWanPort,
+		ECI_MeidaReconnectWait,
+		ECI_AiVideoFrame,
 		ECI_Max,
 	};
 	class ccfg : public cconfig

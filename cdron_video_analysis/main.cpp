@@ -620,7 +620,7 @@ void roiHandle( cv::Mat &img, std::vector<cv::Point> points, std::vector<torch::
 void test_yolov_torch()
 {
 	chen::cyolov_torch yolov_torch("weights/VisDrone.torchscript", "v5", "gpu");
-	yolov_torch.prediction(torch::rand({ 1, 3, 640, 640 }));
+	//yolov_torch.prediction(torch::rand({ 1, 3, 640, 640 }));
 	// 读取分类标签（我们用的官方的所以这里是 coco 中的分类）
 	// 其实这些代码无所谓哪 只是后面预测出来的框没有标签罢了
 	std::ifstream f("weights/coco.names");

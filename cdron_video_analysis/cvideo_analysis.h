@@ -39,6 +39,7 @@ purpose:		log
 #include "cvideo_analysis_platform.h"
 #include "cyolov_onnxruntime.h"
 #include "ctorch_classify.h"
+#include "cyolov_torch.h"
 #include "clicense_plate.h"
 namespace chen
 {
@@ -64,7 +65,9 @@ namespace chen
 		: m_video_analysis_type(EVideoAnalysisTorchScript)
 		, m_source_path("")
 		, m_stoped(true)
+		, m_action(0)
 		, m_detector_ptr(NULL)
+		, m_yolov_ptr(NULL)
 		, m_onnxruntime_ptr(NULL)
 		, class_names()
 		, m_video_cap_ptr(NULL)
@@ -93,7 +96,7 @@ namespace chen
 		void set_skip_frame(uint32 count);
 		void set_car_analysis(uint32 analysis);
 		void set_result_video_analysis(const std::string& result_video_analysis);
-		uint32_t get_action() const { return m_stoped; }
+		uint32_t get_action() const { return m_action; }
 		uint32_t get_skip_frame() const { return m_skip_frame; }
 		uint32_t get_car_analysis() const { return m_car_analysis; }
 		std::string get_result_video_analysis() const {
@@ -102,7 +105,7 @@ namespace chen
 		}
 	private:
 
-		void _work_pthread();
+		void _work_analysis_pthread();
 
 
 		void _work_decode_thread();
@@ -113,13 +116,19 @@ namespace chen
 			bool label = true);
 		std::string _recognize_vehicle_color(const cv::Mat& img);
 		
+
+
+		bool _open();
 	protected:
 	private:
 		EVideoAnalysisPlatformType	m_video_analysis_type;
 		std::string					m_source_path;
 		bool						m_stoped;
+		int32                       m_action;
 		//std::string				m_weights_file;
+		
 		Detector				*	 m_detector_ptr;
+		cyolov_torch			* m_yolov_ptr;
 		cyolov_onnxruntime		*	m_onnxruntime_ptr;
 		std::vector<std::string>	class_names;
 		cv::VideoCapture		*	m_video_cap_ptr;

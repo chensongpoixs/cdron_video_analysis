@@ -32,6 +32,11 @@ namespace chen {
 		std::srand(seed);
 	}
 
+	void cyolov_torch::destroy()
+	{
+		
+	}
+
 	std::vector<torch::Tensor> cyolov_torch::non_max_suppression(torch::Tensor prediction, float confThres, float iouThres)
 	{
 		torch::Tensor xc = prediction.select(2, 4) > confThres;
@@ -243,6 +248,27 @@ namespace chen {
 		return sizeOriginal(result, imgRDs);
 	}
 
+
+	std::vector<std::vector<CDetection>> cyolov_torch::result(torch::Tensor rectangle)
+	{
+		std::vector<std::vector<CDetection>> result;
+		std::vector<CDetection> r;
+		result.push_back(r);
+		for (int i = 0; i < rectangle.size(0); i++)
+		{
+			CDetection drect;
+			drect.class_idx = rectangle[i][5].item().toInt(); 
+			drect.score =  rectangle[i][4].item().toFloat();
+			drect.bbox.x = rectangle[i][0].item().toInt();
+			drect.bbox.y = rectangle[i][1].item().toInt();
+			drect.bbox.width = rectangle[i][2].item().toInt();
+			drect.bbox.height = rectangle[i][3].item().toInt();
+
+			result[0].push_back(drect);
+			//cv::putText(img, label, cv::Point(rectangle[i][0].item().toInt(), rectangle[i][1].item().toInt()), cv::FONT_HERSHEY_PLAIN, 1, color, thickness);
+		}
+		return result;
+	}
 	std::vector<torch::Tensor> cyolov_torch::prediction(std::vector<cv::Mat> imgs)
 	{
 		std::vector<ImageResizeData> imageRDs;
