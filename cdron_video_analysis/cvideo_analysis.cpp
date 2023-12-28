@@ -414,7 +414,7 @@ namespace chen {
 			elapse = static_cast<uint32_t>(ms.count());
 			if (elapse < total_ms && !m_stoped)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(total_ms - elapse));
+				//std::this_thread::sleep_for(std::chrono::milliseconds(total_ms - elapse));
 			}
 		}
 		m_action = 0;
