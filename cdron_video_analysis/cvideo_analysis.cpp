@@ -511,17 +511,19 @@ namespace chen {
 
 			if (!people_Obj.empty())
 			{
-				Json::Value class_object;
+				/*Json::Value class_object;
 				class_object["class"] = 0;
 				class_object["class_data"] = people_Obj;
-				data.append(class_object);
+				data.append(class_object);*/
+				data["class_0"] = people_Obj;
 			}
 			if (!Car_Obj.empty())
 			{
-				Json::Value class_object;
+				/*Json::Value class_object;
 				class_object["class"] = 1;
 				class_object["class_data"] = Car_Obj;
-				data.append(class_object);
+				data.append(class_object);*/
+				data["class_1"] = Car_Obj;
 			}
 			if (!data.empty())
 			{
