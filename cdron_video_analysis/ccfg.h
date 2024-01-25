@@ -42,6 +42,8 @@ namespace chen {
 		ECI_WebHttpWanPort,
 		ECI_MeidaReconnectWait,
 		ECI_AiVideoFrame,
+		ECI_CheckDroneClientOnlineTime,
+		ECI_MqttDroneClientOnlineTopic, 
 		ECI_Max,
 	};
 	class ccfg : public cconfig

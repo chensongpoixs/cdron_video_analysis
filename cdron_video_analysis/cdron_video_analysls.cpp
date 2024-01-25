@@ -91,8 +91,8 @@ namespace chen {
 		{
 			return false;
 		}
-		SYSTEM_LOG("video analysis mgr init ");
-		if (!g_video_analysis_mgr.init())
+		SYSTEM_LOG("drone client video analysis mgr init ");
+		if (!g_drone_client_mgr.init())
 		{
 			return false;
 		}
@@ -115,6 +115,7 @@ namespace chen {
 	 
 			g_video_logic.update(uDelta);
 			g_http_queue_mgr.update(uDelta);
+			g_drone_client_mgr.udpate(uDelta);
 			uDelta = time_elapse.get_elapse();
 
 			if (uDelta < TICK_TIME)
@@ -131,7 +132,7 @@ namespace chen {
 	{
 		SYSTEM_LOG("video analysls  Destroy OK!");
 		g_video_logic.destroy();
-		g_video_analysis_mgr.destroy();
+		g_drone_client_mgr.destroy();
 
 		s_mqtt_client_mgr.stop();
 		s_mqtt_client_mgr.destroy();

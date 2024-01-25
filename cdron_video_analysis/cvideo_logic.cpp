@@ -10,8 +10,10 @@ purpose:		log
 #include "clog.h"
 #include <json/json.h>
 #include <json/value.h>
+#include "ccfg.h"
 #include "cvideo_analysis.h"
 #include "cvideo_analysis_mgr.h"
+#include "cdrone_client_mgr.h"
 namespace chen {
 
 #define PARSE_VALUE(VAR, TYPE, RESULT, PARSE_VALUE_TYPE) 							\
@@ -59,72 +61,80 @@ namespace chen {
 				}
 				else
 				{
+					std::string	client;
 					std::string source;
 					uint32       action;
 					uint32		 video_skip_frame = 0;
-					bool         parse_video_skip_frame = false;
+
 					uint32		 car_analysis = 0;
 					bool		 parse_car_analysis = false;
 					std::string	 result_video_analysis;
 					bool ret = true;
-					try
+					bool         parse_video_skip_frame = false;
+					std::string topic = std::string(msg.m_topic, 0,  g_cfg.get_string(ECI_MqttDroneClientOnlineTopic).length());
+					//NORMAL_EX_LOG("topic = %s", topic.c_str());
+					if (topic == g_cfg.get_string(ECI_MqttDroneClientOnlineTopic))
 					{
-						PARSE_VALUE(source, String, false, parse_video_skip_frame);
-						PARSE_VALUE(action, UInt, false, parse_video_skip_frame);
-						PARSE_VALUE(video_skip_frame, UInt, true, parse_video_skip_frame);
-						PARSE_VALUE(car_analysis, UInt, true, parse_car_analysis);
-						PARSE_VALUE(result_video_analysis, String, false, parse_video_skip_frame);
-
-					}
-					catch (const std::exception&)
-					{
-						ret = false;
-						WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
-					}
-					if (ret)
-					{
-						cvideo_analysis* video_analysis_ptr =  g_video_analysis_mgr.get_video_analysis(source);
-						if (video_analysis_ptr)
+						try
 						{
+							PARSE_VALUE(client, String, false, parse_video_skip_frame);
+						}
+						catch (const std::exception&)
+						{
+							ret = false;
+							WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
+						}
+						if (ret)
+						{
+							g_drone_client_mgr.mqtt_drone_client_heart_beat(client);
 
-							if (!action)
-							{
-								if (!video_analysis_ptr->get_startup())
-								{
-									if (!video_analysis_ptr->startup(source))
-									{
-										WARNING_EX_LOG("startup video analysis failed [source = %s]", source.c_str());
-									}
-								}
-								if (parse_video_skip_frame)
-								{
-									video_analysis_ptr->set_skip_frame(video_skip_frame);
-								}
-								if (parse_car_analysis)
-								{
-									video_analysis_ptr->set_car_analysis(car_analysis);
-								}
-								if (!result_video_analysis.empty())
-								{
-									video_analysis_ptr->set_result_video_analysis(result_video_analysis);
-								}
-							}
-							else
-							{
-								//video_analysis_ptr->stop();
-								g_video_analysis_mgr.del_video_analysis(source);
-							}
 						}
 						else
 						{
-							WARNING_EX_LOG("not find [source = %s]", source.c_str());
+							WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
+
 						}
 					}
 					else
 					{
-						WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
+						
+						try
+						{
+							PARSE_VALUE(client, String, false, parse_video_skip_frame);
+							PARSE_VALUE(source, String, false, parse_video_skip_frame);
+							PARSE_VALUE(action, UInt, false, parse_video_skip_frame);
+							PARSE_VALUE(video_skip_frame, UInt, true, parse_video_skip_frame);
+							PARSE_VALUE(car_analysis, UInt, true, parse_car_analysis);
+							PARSE_VALUE(result_video_analysis, String, false, parse_video_skip_frame);
 
+						}
+						catch (const std::exception&)
+						{
+							ret = false;
+							WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
+						}
+						if (ret)
+						{
+							cdrone_action_info action_info;
+							action_info.client = client;
+							action_info.source = source;
+							if (video_skip_frame < 5)
+							{
+								video_skip_frame = 5;
+							}
+							action_info.video_skip_frame = video_skip_frame;
+							action_info.car_analysis = car_analysis;
+							action_info.result_video_analysis = result_video_analysis;
+							g_drone_client_mgr.mqtt_drone_client_action(action_info);
+
+						}
+						else
+						{
+							WARNING_EX_LOG("parse value [topic = %s][payload = %s] failed !!!", msg.m_topic.c_str(), msg.m_payload.c_str());
+
+						}
 					}
+					
 				}
 			}
 			msgs.pop_front();

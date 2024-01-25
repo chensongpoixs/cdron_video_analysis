@@ -5,6 +5,7 @@
 #include "ccfg.h"
 #include <thread>
 #include "cweb_http_api_proxy.h"
+#include "cdrone_client_mgr.h"
 //#include <json.h>
 #include "cvideo_analysis_mgr.h"
 #include <json/json.h>
@@ -214,7 +215,7 @@ namespace chen {
 				return;
 			}
 
-
+			std::string client;
 			std::string source;
 			uint32       action;
 			uint32		 video_skip_frame = 0;
@@ -225,6 +226,7 @@ namespace chen {
 		 
 			try
 			{
+				PARSE_VALUE(client, String, false, parse_video_skip_frame);
 				PARSE_VALUE(source, String, false, parse_video_skip_frame);
 				PARSE_VALUE(action, UInt, false, parse_video_skip_frame);
 				PARSE_VALUE(video_skip_frame, UInt, true, parse_video_skip_frame);
@@ -246,7 +248,18 @@ namespace chen {
 				response->write(str);
 				return;
 			}
-			uint32_t ret = g_web_http_api_proxy.topic_video_analysis(source, action, video_skip_frame, parse_video_skip_frame, result_video_analysis);
+			cdrone_action_info action_info;
+			action_info.client = client;
+			action_info.source = source;
+			action_info.action = action;
+			if (video_skip_frame < 5)
+			{
+				video_skip_frame = 5;
+			}
+			action_info.video_skip_frame = video_skip_frame;
+			action_info.car_analysis = car_analysis;
+			action_info.result_video_analysis = result_video_analysis;
+			uint32_t ret = g_web_http_api_proxy.topic_video_analysis(action_info);
 			 	Json::Value value;
 				value["result"] = ret;
 				Json::StyledWriter swriter;
@@ -267,6 +280,7 @@ namespace chen {
 			 for (size_t i = 0; i < cvideo_analysis_infos.size(); ++i)
 		 	{
 		 		Json::Value  item;
+				item["client"] = cvideo_analysis_infos[i].client;
 		 		item["source"] = cvideo_analysis_infos[i].source;
 		 		item["action"] = cvideo_analysis_infos[i].action;
 		 		item["car_analysis"] = cvideo_analysis_infos[i].car_analysis;
@@ -409,48 +423,15 @@ namespace chen {
 
 	}
 
-	  uint32_t      cweb_http_api_mgr:: topic_video_analysis(const std::string& source, uint32_t action, uint32_t video_skip_frame, uint32_t car_analysis, const std::string& result_video_analysis)
+	  uint32_t      cweb_http_api_mgr:: topic_video_analysis(const struct cdrone_action_info& action_info)
 	{
-		  cvideo_analysis* video_analysis_ptr = g_video_analysis_mgr.get_video_analysis(source);
-		  if (video_analysis_ptr)
-		  {
-
-			  if (!action)
-			  {
-				  if (!video_analysis_ptr->get_startup())
-				  {
-					  if (!video_analysis_ptr->startup(source))
-					  {
-						  WARNING_EX_LOG("startup video analysis failed [source = %s]", source.c_str());
-						  return 509;
-					  }
-				  }
-				  if (video_skip_frame)
-				  {
-					  video_analysis_ptr->set_skip_frame(video_skip_frame);
-				  }
-				  if (!result_video_analysis.empty())
-				  {
-					  video_analysis_ptr->set_result_video_analysis(result_video_analysis);
-				  }
-			  }
-			  else
-			  {
-				  //video_analysis_ptr->stop();
-				  g_video_analysis_mgr.del_video_analysis(source);
-			  }
-		  }
-		  else
-		  {
-			  return 505;
-		  }
-		  return 200;
+		  return g_drone_client_mgr.http_drone_client_action(action_info);
 	}
 	  std::vector< cvideo_analysis_info>  cweb_http_api_mgr::get_all_video_analysis_info()
 	  {
-		  std::vector< cvideo_analysis_info> video_analysis_infos;
-		  g_video_analysis_mgr.build_video_analysis_infos(video_analysis_infos);
-			return video_analysis_infos;
+		  //std::vector< cvideo_analysis_info> video_analysis_infos;
+		 // g_video_analysis_mgr.build_video_analysis_infos(video_analysis_infos);
+			return g_drone_client_mgr.http_drone_client_video_analysis_infos();
 	  }
 	/*std::vector< croom_info>   cweb_http_api_mgr::get_all_room()
 	{

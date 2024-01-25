@@ -45,13 +45,15 @@ namespace chen
 {
 	struct cvideo_analysis_info
 	{
+		std::string  client;
 		std::string  source;
 		uint32_t		 action;
 		uint32_t		 video_skip_frame;
 		uint32_t       car_analysis;
 		std::string  result_video_analysis;
 		cvideo_analysis_info()
-			: source("")
+			: client("")
+			, source("")
 			, action(1)
 			, video_skip_frame(0)
 			, car_analysis(0)

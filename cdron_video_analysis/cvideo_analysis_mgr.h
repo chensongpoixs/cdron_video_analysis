@@ -45,12 +45,22 @@ namespace chen
 		typedef std::unordered_map<std::string, cvideo_analysis*>         VIDEO_ANALYSIS_MAP;
 	public:
 		explicit cvideo_analysis_mgr()
-		 : m_all_video_map(){}
+		 : m_all_video_map()
+		 , m_heart_beat(0){}
 		virtual ~cvideo_analysis_mgr() {}
 
 	public:
 		bool init();
 		void destroy();
+
+
+	public:
+		void update_drone_client_heart_beat();
+		time_t get_heart_beat() const { return m_heart_beat; }
+
+
+		bool check_drone_offline()const ;
+
 
 	public:
 		cvideo_analysis*  get_video_analysis(const std::string& source);
@@ -60,9 +70,10 @@ namespace chen
 	protected:
 	private:
 		VIDEO_ANALYSIS_MAP								m_all_video_map;
+		time_t											m_heart_beat;//ECI_HeartBeat
 	};
 
-	extern cvideo_analysis_mgr g_video_analysis_mgr;
+	//extern cvideo_analysis_mgr g_video_analysis_mgr;
 }
 
 #endif // C_VIDEO_ANALYSIS_H

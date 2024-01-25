@@ -154,6 +154,7 @@
     <ClInclude Include="cconfig.h" />
     <ClInclude Include="cconstructor_magic.h" />
     <ClInclude Include="cdigit2str.h" />
+    <ClInclude Include="cdrone_client_mgr.h" />
     <ClInclude Include="cdron_video_analysls.h" />
     <ClInclude Include="cgpu_detector.h" />
     <ClInclude Include="chttp_queue_mgr.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="ccmd_param.cpp" />
     <ClCompile Include="cconfig.cpp" />
     <ClCompile Include="cdigit2str.cpp" />
+    <ClCompile Include="cdrone_client_mgr.cpp" />
     <ClCompile Include="cdron_video_analysls.cpp" />
     <ClCompile Include="cgpu_detector.cpp" />
     <ClCompile Include="chttp_queue_mgr.cpp" />

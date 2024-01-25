@@ -54,6 +54,8 @@ namespace chen {
 		set_uint32(ECI_WebHttpWanPort, "web_http_wan_port", 9200);
 		set_uint32(ECI_MeidaReconnectWait, "media_reconnect_wait", 5);
 		set_uint32(ECI_AiVideoFrame, "ai_video_frame", 30);
+		set_uint32(ECI_CheckDroneClientOnlineTime, "check_drone_client_online_time", 300);
+		set_string(ECI_MqttDroneClientOnlineTopic, "mqtt_drone_client_online_topic", "drone_client_online");
 		
  
 #if _DEBUG

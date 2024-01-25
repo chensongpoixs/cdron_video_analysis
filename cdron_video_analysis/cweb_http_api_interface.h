@@ -16,6 +16,7 @@ purpose:	Location
 #include <utility>
 #include <vector>
 #include "cvideo_analysis.h"
+#include "cdrone_client_mgr.h"
 //#include "croom.h"
 //#include "croom_mgr.h"
 namespace chen {
@@ -31,7 +32,7 @@ namespace chen {
 		virtual uint32_t  kick_room_username(const std::string& room_name, const std::string & user_name) = 0;
 		virtual uint32_t  add_while_room_username(const std::string& room_name, const std::string & user_name) = 0;
 		virtual uint32_t  delete_while_room_username(const std::string& room_name, const std::string & user_name) = 0;*/
-		virtual uint32_t       topic_video_analysis(const std::string& source, uint32_t action, uint32_t video_skip_frame, uint32_t car_analysis, const std::string& result_video_analysis) = 0;
+		virtual uint32_t       topic_video_analysis(const struct cdrone_action_info & action_info) = 0;
 		
 		virtual std::vector< cvideo_analysis_info>  get_all_video_analysis_info()   = 0;
 		

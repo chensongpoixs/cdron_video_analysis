@@ -82,6 +82,9 @@
     <Filter Include="proxy">
       <UniqueIdentifier>{c585f478-7dcf-4f94-8580-fa8a2239001e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="global_logic">
+      <UniqueIdentifier>{cac063ae-a976-4c11-8e17-502fd5f64381}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cxxopts.h">
@@ -357,6 +360,9 @@
     <ClInclude Include="utility.hpp">
       <Filter>http</Filter>
     </ClInclude>
+    <ClInclude Include="cdrone_client_mgr.h">
+      <Filter>global_logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="detector.cpp">
@@ -517,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="cweb_http_api_proxy.cpp">
       <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="cdrone_client_mgr.cpp">
+      <Filter>global_logic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

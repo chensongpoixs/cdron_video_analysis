@@ -7,10 +7,12 @@ purpose:		log
 ************************************************************************************************/
 #include "cvideo_analysis_mgr.h"
 #include "clog.h"
+#include "ccfg.h"
 namespace chen {
-	cvideo_analysis_mgr g_video_analysis_mgr;
+	//cvideo_analysis_mgr g_video_analysis_mgr;
 	bool cvideo_analysis_mgr::init()
 	{
+		m_heart_beat = ::time(NULL);
 		return true;
 	}
 
@@ -25,7 +27,17 @@ namespace chen {
 			NORMAL_EX_LOG("[source = %s] free object OK !!! ", iter->first.c_str());
 		}
 		m_all_video_map.clear();
-		cv::destroyAllWindows();
+		//cv::destroyAllWindows();
+	}
+
+	void cvideo_analysis_mgr::update_drone_client_heart_beat()
+	{
+		m_heart_beat = ::time(NULL);
+	}
+
+	bool cvideo_analysis_mgr::check_drone_offline() const
+	{
+		return m_heart_beat + g_cfg.get_uint32(ECI_CheckDroneClientOnlineTime) < ::time(NULL);
 	}
 
 	cvideo_analysis * cvideo_analysis_mgr::get_video_analysis(const std::string & source)

@@ -120,6 +120,9 @@ namespace chen {
 		SYSTEM_LOG("mqtt connect ok !!!");
 		static const char *VideoAnalysis = "video_analysis";
 		client_ptr->subscribe(VideoAnalysis);
+
+		SYSTEM_LOG("mqtt subscribe topic = %s", g_cfg.get_string(ECI_MqttDroneClientOnlineTopic).c_str());
+		client_ptr->subscribe(std::string(g_cfg.get_string(ECI_MqttDroneClientOnlineTopic) + "/#").c_str());
 	}
 
 	void cmqtt_mgr::_register_mqtt_receive(hv::MqttClient * cli, mqtt_message_t * msg)
@@ -130,8 +133,8 @@ namespace chen {
 			
 			clock_guard  lock(m_lock);
 			cmqtt_msg mqtt_msg;
-			mqtt_msg.m_topic = msg->topic;
-			mqtt_msg.m_payload = msg->payload;
+			mqtt_msg.m_topic = std::string(msg->topic, msg->topic_len);
+			mqtt_msg.m_payload = std::string(msg->payload, msg->payload_len);
 			m_msgs.push_back(mqtt_msg);
 		}
 	}

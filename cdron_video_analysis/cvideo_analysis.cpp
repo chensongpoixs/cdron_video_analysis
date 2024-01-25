@@ -458,7 +458,7 @@ namespace chen {
 					item["y"] = detection.bbox.y;
 					item["width"] = detection.bbox.width;
 					item["height"] = detection.bbox.height;
-
+					item["score"] = detection.score;
 					//# #  3：汽车
 					//# #  4:面包车
 					//# #  5:卡车
@@ -540,7 +540,7 @@ namespace chen {
 			return false;
 		}
 		m_video_cap_ptr = new cv::VideoCapture();
-
+		//m_video_cap_ptr->set();
 		m_video_cap_ptr->open(m_source_path, cv::CAP_FFMPEG);
 		if (!m_video_cap_ptr->isOpened())
 		{

@@ -18,12 +18,13 @@ purpose:	Location
 #include "cweb_http_api_mgr.h"
 #include "cweb_http_api_proxy.h"
 #include "chttp_queue_mgr.h"
+#include "cdrone_client_mgr.h"
 //#include "croom.h"
 #include <vector>
 namespace chen {
 	BEGIN_PROXY_MAP(cweb_http_api)
 		PROXY_WORKER_METHOD0(std::vector< cvideo_analysis_info>, get_all_video_analysis_info);
-		PROXY_WORKER_METHOD5(uint32_t , topic_video_analysis, const std::string&  , uint32_t  , uint32_t  , uint32_t  , const std::string&  );
+		PROXY_WORKER_METHOD1(uint32_t, topic_video_analysis, const struct cdrone_action_info&);
 		
 		//PROXY_WORKER_METHOD1(std::vector< chen::cuser_info>, get_room_info, const std::string &  )
 		////virtual uint32_t  kick_room_username(const std::string& room_name, const std::string & user_name)
