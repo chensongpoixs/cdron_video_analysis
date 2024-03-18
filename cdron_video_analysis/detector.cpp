@@ -11,7 +11,7 @@ Detector::Detector(const std::string& model_path, const torch::DeviceType& devic
         std::cerr << "Error loading the model [model_path = "<< model_path <<"][e = "<<e.what()<<"]!\n";
        // std::exit(EXIT_FAILURE);
         using namespace chen;
-        WARNING_EX_LOG("Error loading the model [model_path =%s][e = %s] failed !!!", model_path.c_str(), e.what());
+        WARNING_EX_LOG("Error loading the model[device_ = %u] [model_path =%s][e = %s] failed !!!", device_,  model_path.c_str(), e.what());
         return;
     }
 
