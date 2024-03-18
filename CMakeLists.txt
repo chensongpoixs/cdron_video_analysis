@@ -1,5 +1,5 @@
 
-project(test_torch)
+project(cdron_video_analysis)
 MESSAGE(STATUS "#########################")
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
@@ -7,6 +7,7 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 ADD_DEFINITIONS(-std=c++17 -g -Wall   )
 
 ADD_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0)
+#ADD_DEFINITIONS(-DJSONCPP_USING_SECURE_MEMORY=0)
 
 SET(EXTRA_INC_DIR /root/dep)
 
@@ -23,33 +24,17 @@ INCLUDE_DIRECTORIES(
 		${EXTRA_INC_DIR}/libhv/include 
 		${EXTRA_INC_DIR}/jsoncpp/include 
 		./cdron_video_analysis/
-		./cdron_video_analysis/HyperLPR/ 
-		 
-		 ./cdron_video_analysis/HyperLPR/buffer_module/ 
-		 
-		 ./cdron_video_analysis/HyperLPR/c_api/ 
-		 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/context_module/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/inference_helper_module/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/ 
-		 
-		 
-		 ./cdron_video_analysis/HyperLPR/nn_module/ 
+
+		#./cdron_video_analysis/HyperLPR/ 
+		# ./cdron_video_analysis/HyperLPR/buffer_module/ 
+		# ./cdron_video_analysis/HyperLPR/c_api/ 
+		# ./cdron_video_analysis/HyperLPR/context_module/ 
+		# ./cdron_video_analysis/HyperLPR/inference_helper_module/ 
+		# ./cdron_video_analysis/HyperLPR/nn_implementation_module/ 
+		# ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/ 
+		# ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/ 
+		# ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/ 
+		# ./cdron_video_analysis/HyperLPR/nn_module/ 
 
         )
 
@@ -59,6 +44,7 @@ LINK_DIRECTORIES(
         /usr/local/lib64
         /usr/lib/x86_64-linux-gnu
         /usr/local/cuda-11.8/lib64
+	/usr/lib/x86_64-linux-gnu/
         /root/Work/libtorch/lib
         /usr/local/lib
         ${PROJECT_SOURCE_DIR}/linux/lib
@@ -82,70 +68,71 @@ file(GLOB ALL_CXX_SRCS
 				 
 				 
 				 ###
-				 ./cdron_video_analysis/HyperLPR/*.h
-                 ./cdron_video_analysis/HyperLPR/*.cpp
-                 ./cdron_video_analysis/HyperLPR/*.hpp
-                 ./cdron_video_analysis/HyperLPR/*.cc
+				 #			 ./cdron_video_analysis/HyperLPR/*.h
+				 #./cdron_video_analysis/HyperLPR/*.cpp
+				 # ./cdron_video_analysis/HyperLPR/*.hpp
+				 #  ./cdron_video_analysis/HyperLPR/*.cc
 				 
-				 ./cdron_video_analysis/HyperLPR/buffer_module/*.h
-                 ./cdron_video_analysis/HyperLPR/buffer_module/*.cpp
-                 ./cdron_video_analysis/HyperLPR/buffer_module/*.hpp
-                 ./cdron_video_analysis/HyperLPR/buffer_module/*.cc
+				 #./cdron_video_analysis/HyperLPR/buffer_module/*.h
+				 #$./cdron_video_analysis/HyperLPR/buffer_module/*.cpp
+				 #./cdron_video_analysis/HyperLPR/buffer_module/*.hpp
+				 # ./cdron_video_analysis/HyperLPR/buffer_module/*.cc
 				 
-				 ./cdron_video_analysis/HyperLPR/c_api/*.h
-                 ./cdron_video_analysis/HyperLPR/c_api/*.cpp
-                 ./cdron_video_analysis/HyperLPR/c_api/*.hpp
-                 ./cdron_video_analysis/HyperLPR/c_api/*.cc
-				 
-				 
-				 
-				 ./cdron_video_analysis/HyperLPR/context_module/*.h
-                 ./cdron_video_analysis/HyperLPR/context_module/*.cpp
-                 ./cdron_video_analysis/HyperLPR/context_module/*.hpp
-                 ./cdron_video_analysis/HyperLPR/context_module/*.cc
+				 #./cdron_video_analysis/HyperLPR/c_api/*.h
+				 # ./cdron_video_analysis/HyperLPR/c_api/*.cpp
+				 #./cdron_video_analysis/HyperLPR/c_api/*.hpp
+				 # ./cdron_video_analysis/HyperLPR/c_api/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.h
-                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cpp
-                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.hpp
-                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cc
+				 
+				 #./cdron_video_analysis/HyperLPR/context_module/*.h
+				 #./cdron_video_analysis/HyperLPR/context_module/*.cpp
+				 # ./cdron_video_analysis/HyperLPR/context_module/*.hpp
+				 #./cdron_video_analysis/HyperLPR/context_module/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.h
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.hpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cc
+				 #./cdron_video_analysis/HyperLPR/inference_helper_module/*.h
+				 # ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cpp
+				 # ./cdron_video_analysis/HyperLPR/inference_helper_module/*.hpp
+				 # ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.h
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.hpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cc
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/*.h
+				 # ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cpp
+				 # ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.hpp
+				 #  ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.h
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.hpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cc
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.h
+				 # ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cpp
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.hpp
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.h
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.hpp
-                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cc
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.h
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cpp
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.hpp
+				 # ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cc
 				 
 				 
-				 ./cdron_video_analysis/HyperLPR/nn_module/*.h
-                 ./cdron_video_analysis/HyperLPR/nn_module/*.cpp
-                 ./cdron_video_analysis/HyperLPR/nn_module/*.hpp
-                 ./cdron_video_analysis/HyperLPR/nn_module/*.cc
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.h
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cpp
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.hpp
+				 #./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cc
+				 
+				 
+				 #./cdron_video_analysis/HyperLPR/nn_module/*.h
+				 #./cdron_video_analysis/HyperLPR/nn_module/*.cpp
+				 #./cdron_video_analysis/HyperLPR/nn_module/*.hpp
+				 # ./cdron_video_analysis/HyperLPR/nn_module/*.cc
                  )
 
 add_executable(${PROJECT_NAME} ${ALL_CXX_SRCS})
 
 
 
-set(ALL_LIB     pthread
+set(ALL_LIB     
+		 -lpthread
 
 		libboost_atomic.a                
 		libboost_exception.a             
@@ -188,8 +175,23 @@ set(ALL_LIB     pthread
 
 		 #libhv.so
 		 libhv_static.a
-		libjsoncpp.a
-        pthread
+		 #		 /usr/lib/x86_64-linux-gnu/libdl.so
+		 #	/usr/lib/x86_64-linux-gnu/7.5.0/libdl.so
+		 #	 libcrypto.a       
+		 #	 /usr/lib/x86_64-linux-gnu/libdl.a
+		 dl
+		 m
+		 # libdl.a
+		 -lpthread
+		 #libssl.a
+		 libjsoncpp.a
+				#		/root/dep/jsoncpp/lib/libjsoncpp.a
+				libavcodec.so 
+			       	libavformat.so  
+				libavutil.so
+				libswscale.so
+				libswresample.so
+				
         #/usr/lib/x86_64-linux-gnu/libpng16.so
 
 
@@ -255,7 +257,6 @@ set(ALL_LIB     pthread
         libopencv_videostab.so
         libopencv_calib3d.so
         libopencv_cudaimgproc.so
-        pthread
         libopencv_dnn.so
         libopencv_fuzzy.so
         libopencv_line_descriptor.so

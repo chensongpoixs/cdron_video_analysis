@@ -424,8 +424,14 @@ namespace chen
 
 
 #define GET_OBJECT_THREAD(o)
-                                                 
-//#define GET_OBJECT_THREAD(o)													\
+	
+
+
+
+
+
+
+// #define GET_OBJECT_THREAD(o)													\
 //	Object *object = g_cthread_pool_mgr.get_object_thread(o);					\
 //	if (!object)																\
 //	{																			\

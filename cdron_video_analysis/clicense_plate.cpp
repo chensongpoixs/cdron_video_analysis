@@ -9,6 +9,7 @@ purpose:		log
 #include "clicense_plate.h"
 #include <iostream>
 //#include "clog.h"
+#if defined(_MSC_VER)
 #include "c_api/hyper_lpr_sdk.h"
 namespace chen {
 	static const std::vector<std::string> TYPES = { "蓝牌", "黄牌单层", "白牌单层", "绿牌新能源", "黑牌港澳", "香港单层", "香港双层", "澳门单层", "澳门双层", "黄牌双层" };
@@ -102,3 +103,4 @@ namespace chen {
 		return true;
 	}
 }
+#endif 

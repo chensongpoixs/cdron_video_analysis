@@ -86,6 +86,7 @@ std::vector<std::string> LoadNames(const std::string& path) {
     return class_names;
 }
 
+#if defined(_MSC_VER)
 
 void Demo(cv::Mat& img,
         const std::vector<std::vector<CDetection>>& detections,
@@ -374,6 +375,7 @@ int test_main(int argc, char **argv) {
 	return 0;
 }
 
+#endif 
 #include "cdron_video_analysls.h"
 #include <csignal>
 void Stop(int i)
@@ -391,7 +393,7 @@ void RegisterSignal()
 #include <iostream>
 #include <stdio.h>
 #include "inference.h"
-#include <filesystem>
+//#include <filesystem>
 
 //
 //
@@ -493,6 +495,7 @@ using namespace cv;
 //	}
 //}
 #include "detector.h"
+#if defined(_MSC_VER)
 void test_onnxruntime()
 {
 	chen::cyolov_onnxruntime detector;
@@ -570,6 +573,7 @@ void test_plate()
 	cv::Mat plate_img = cv::imread("./resource/images/test_img.jpg");
 	chen::g_license_plate.recognition(plate_img, plate_code);
 }
+#endif 
 
 torch::Tensor getRegionData(std::vector<cv::Point> points, torch::Tensor preData, bool in)
 {

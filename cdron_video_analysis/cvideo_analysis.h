@@ -70,7 +70,9 @@ namespace chen
 		, m_action(0)
 		, m_detector_ptr(NULL)
 		, m_yolov_ptr(NULL)
+#if defined(_MSC_VER)
 		, m_onnxruntime_ptr(NULL)
+#endif 
 		, class_names()
 		, m_video_cap_ptr(NULL)
 		, m_video_index(-1)
@@ -131,7 +133,9 @@ namespace chen
 		
 		Detector				*	 m_detector_ptr;
 		cyolov_torch			* m_yolov_ptr;
+#if defined(_MSC_VER)
 		cyolov_onnxruntime		*	m_onnxruntime_ptr;
+#endif 
 		std::vector<std::string>	class_names;
 		cv::VideoCapture		*	m_video_cap_ptr;
 		int32						m_video_index;

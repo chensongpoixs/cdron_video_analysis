@@ -12,7 +12,6 @@ purpose:		log
 #include <functional>
 #if defined(_MSC_VER)
 #include <Windows.h>
-#endif
 #include "c_api/hyper_lpr_sdk.h"
 #include "opencv2/opencv.hpp"
 namespace chen
@@ -43,6 +42,7 @@ namespace chen
 	extern clicense_plate g_license_plate;
 
 }
+#endif
 
 
 #endif // C_LICENSE_PLATE_H

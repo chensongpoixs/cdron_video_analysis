@@ -8,6 +8,7 @@ purpose:		log
 #include "cvideo_analysis.h"
 #include "detector.h"
 #include <json/json.h>
+#include <json/value.h>
 #include "clog.h"
 #include "cmqtt_mgr.h"
 #include "ccfg.h"
@@ -167,6 +168,7 @@ namespace chen {
 			NORMAL_EX_LOG("[source = %s]  yolov totch delete !!!", m_source_path.c_str());
 		}
 		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
+#if defined(_MSC_VER)
 		if (m_onnxruntime_ptr)
 		{
 			delete m_onnxruntime_ptr;
@@ -174,6 +176,7 @@ namespace chen {
 			NORMAL_EX_LOG("[source = %s] onnxruntime delete !!!", m_source_path.c_str());
 		}
 		NORMAL_EX_LOG("[source = %s] thread exit OK !!!", m_source_path.c_str());
+#endif 
 		if (m_video_cap_ptr)
 		{
 			m_video_cap_ptr->release();
@@ -221,7 +224,6 @@ namespace chen {
 		bool data = false;
 
 
-#if 1
 		if (m_video_analysis_type == EVideoAnalysisTorchScript)
 		{
 			torch::DeviceType device_type;
@@ -239,6 +241,7 @@ namespace chen {
 			std::lock_guard<std::mutex> lock(g_video_analysis_lock);
 			m_detector_ptr = new Detector(weights, device_type);
 		}
+#if defined(_MSC_VER)
 		else  if (m_video_analysis_type == EVideoAnalysisONNXRuntime)
 		{
 			m_onnxruntime_ptr = new cyolov_onnxruntime();
@@ -250,12 +253,12 @@ namespace chen {
 			m_onnxruntime_ptr->YOLODetector(true, cv::Size(640, 640));
 			NORMAL_EX_LOG("[source = %s]onnxruntime  init OK !!!", m_source_path.c_str());
 		}
-#endif
+#endif 
 
 		//g_license_plate.init("D:/Work/cartificial_intelligence/HyperLPR/resource/models/r2_mobile");
 		while (!m_stoped)
 		{
-			pre_time = std::chrono::high_resolution_clock::now();
+			pre_time = std::chrono::steady_clock::now();//std::chrono::high_resolution_clock::now();
 			//if (m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
 			{
 				{
@@ -298,11 +301,13 @@ namespace chen {
 						//}
 
 					}
+#if defined(_MSC_VER)
 					else if (m_video_analysis_type == EVideoAnalysisONNXRuntime)
 					{
 						onnxruntimeresult = m_onnxruntime_ptr->detect(img, 0.4, 0.45);
 						result.push_back(onnxruntimeresult);
 					}
+#endif 
 
 					_send_video_info(img, result, class_names, false);
 					for (auto lll : result)
@@ -310,7 +315,7 @@ namespace chen {
 						lll.clear();
 					}
 					result.clear();
-					auto  end = std::chrono::high_resolution_clock::now();
+					auto  end = std::chrono::steady_clock::now(); //std::chrono::high_resolution_clock::now();
 					auto  duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - pre_time);
 					// It should be known that it takes longer time at first time
 					//std::cout << "=======> post-process takes : " << duration.count() << " ms" << std::endl;
@@ -367,7 +372,7 @@ namespace chen {
 
 		while (!m_stoped)
 		{
-			pre_time = std::chrono::high_resolution_clock::now();
+			pre_time = std::chrono::steady_clock::now();//std::chrono::high_resolution_clock::now();
 			if (m_video_index != -1 && m_video_cap_ptr->grab() && m_video_cap_ptr->retrieve(img, m_video_index) /*d_reader->grab() && d_reader->nextFrame(d_frame)*/)
 			{
 				if (++skip_frame_count > m_skip_frame)

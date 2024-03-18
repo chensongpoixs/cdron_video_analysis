@@ -16,6 +16,7 @@ purpose:	Location
 #include "cweb_http_api_interface.h"
 #include "server_http.hpp"
 #include <future>
+#include <json/json.h>
 
 // Added for the json-example
 #define BOOST_SPIRIT_THREADSAFE

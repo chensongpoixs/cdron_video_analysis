@@ -280,12 +280,12 @@ namespace chen {
 			 for (size_t i = 0; i < cvideo_analysis_infos.size(); ++i)
 		 	{
 		 		Json::Value  item;
-				item["client"] = cvideo_analysis_infos[i].client;
-		 		item["source"] = cvideo_analysis_infos[i].source;
+				item["client"] = cvideo_analysis_infos[i].client.c_str();
+		 		item["source"] = cvideo_analysis_infos[i].source.c_str();
 		 		item["action"] = cvideo_analysis_infos[i].action;
 		 		item["car_analysis"] = cvideo_analysis_infos[i].car_analysis;
 		 		item["video_skip_frame"] = cvideo_analysis_infos[i].video_skip_frame;
-				item["result_video_analysis"] = cvideo_analysis_infos[i].result_video_analysis;
+				item["result_video_analysis"] = cvideo_analysis_infos[i].result_video_analysis.c_str();
 		 		value["video_analysis_infos"].append(item);
 		 	} 
 			Json::StyledWriter swriter;
