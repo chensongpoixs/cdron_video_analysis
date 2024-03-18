@@ -7,7 +7,7 @@ purpose:		log
 ************************************************************************************************/
 #ifndef _C_YOLOV_ONNXRUNTIME_H
 #define _C_YOLOV_ONNXRUNTIME_H
-
+#if defined(_MSC_VER)
 // Cpp native
 #include <fstream>
 #include <vector>
@@ -68,5 +68,5 @@ namespace chen {
 		Utils utils;
 	};
 }
-
+#endif 
 #endif // _C_YOLOV_ONNXRUNTIME_H
