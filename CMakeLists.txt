@@ -22,6 +22,34 @@ INCLUDE_DIRECTORIES(
 		${EXTRA_INC_DIR}/boost/include 
 		${EXTRA_INC_DIR}/libhv/include 
 		${EXTRA_INC_DIR}/jsoncpp/include 
+		./cdron_video_analysis/
+		./cdron_video_analysis/HyperLPR/ 
+		 
+		 ./cdron_video_analysis/HyperLPR/buffer_module/ 
+		 
+		 ./cdron_video_analysis/HyperLPR/c_api/ 
+		 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/context_module/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/inference_helper_module/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/ 
+		 
+		 
+		 ./cdron_video_analysis/HyperLPR/nn_module/ 
 
         )
 
@@ -51,6 +79,66 @@ file(GLOB ALL_CXX_SRCS
                  ./cdron_video_analysis/*.cpp
                  ./cdron_video_analysis/*.hpp
                  ./cdron_video_analysis/*.cc
+				 
+				 
+				 ###
+				 ./cdron_video_analysis/HyperLPR/*.h
+                 ./cdron_video_analysis/HyperLPR/*.cpp
+                 ./cdron_video_analysis/HyperLPR/*.hpp
+                 ./cdron_video_analysis/HyperLPR/*.cc
+				 
+				 ./cdron_video_analysis/HyperLPR/buffer_module/*.h
+                 ./cdron_video_analysis/HyperLPR/buffer_module/*.cpp
+                 ./cdron_video_analysis/HyperLPR/buffer_module/*.hpp
+                 ./cdron_video_analysis/HyperLPR/buffer_module/*.cc
+				 
+				 ./cdron_video_analysis/HyperLPR/c_api/*.h
+                 ./cdron_video_analysis/HyperLPR/c_api/*.cpp
+                 ./cdron_video_analysis/HyperLPR/c_api/*.hpp
+                 ./cdron_video_analysis/HyperLPR/c_api/*.cc
+				 
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/context_module/*.h
+                 ./cdron_video_analysis/HyperLPR/context_module/*.cpp
+                 ./cdron_video_analysis/HyperLPR/context_module/*.hpp
+                 ./cdron_video_analysis/HyperLPR/context_module/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.h
+                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cpp
+                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.hpp
+                 ./cdron_video_analysis/HyperLPR/inference_helper_module/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.h
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.hpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.h
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.hpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/classification/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.h
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.hpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/detect/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.h
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.hpp
+                 ./cdron_video_analysis/HyperLPR/nn_implementation_module/recognition/*.cc
+				 
+				 
+				 ./cdron_video_analysis/HyperLPR/nn_module/*.h
+                 ./cdron_video_analysis/HyperLPR/nn_module/*.cpp
+                 ./cdron_video_analysis/HyperLPR/nn_module/*.hpp
+                 ./cdron_video_analysis/HyperLPR/nn_module/*.cc
                  )
 
 add_executable(${PROJECT_NAME} ${ALL_CXX_SRCS})
