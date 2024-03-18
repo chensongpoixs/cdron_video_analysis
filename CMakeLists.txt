@@ -8,7 +8,7 @@ ADD_DEFINITIONS(-std=c++17 -g -Wall   )
 
 ADD_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0)
 
-SET(EXTRA_INC_DIR /home/dep)
+SET(EXTRA_INC_DIR /root/dep)
 
 
 
