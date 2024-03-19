@@ -237,6 +237,8 @@ namespace chen {
 			}
 			// load network
 			std::string weights = "./weights/VisDrone.torchscript";
+			//std::string weights = "./weights/person.torchscript";
+			//std::string weights = "./weights/yolov5s.torchscript";
 			//m_yolov_ptr = new cyolov_torch(weights, "v5", "gpu");
 			std::lock_guard<std::mutex> lock(g_video_analysis_lock);
 			m_detector_ptr = new Detector(weights, device_type);

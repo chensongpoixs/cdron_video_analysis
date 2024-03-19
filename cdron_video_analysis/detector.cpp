@@ -3,14 +3,15 @@
  
 
 Detector::Detector(const std::string& model_path, const torch::DeviceType& device_type) : device_(device_type) {
+        using namespace chen;
     try {
         // Deserialize the ScriptModule from a file using torch::jit::load().
+	    NORMAL_EX_LOG("device_type = %u, cuda = %u, [dviceName = %s]", device_type, torch::cuda::is_available(), c10::DeviceTypeName(c10::DeviceType::CUDA).c_str());
         module_ = torch::jit::load(model_path, device_);
     }
     catch (const c10::Error& e) {
         std::cerr << "Error loading the model [model_path = "<< model_path <<"][e = "<<e.what()<<"]!\n";
        // std::exit(EXIT_FAILURE);
-        using namespace chen;
         WARNING_EX_LOG("Error loading the model[device_ = %u] [model_path =%s][e = %s] failed !!!", device_,  model_path.c_str(), e.what());
         return;
     }

@@ -16,8 +16,8 @@ SET(EXTRA_INC_DIR /root/dep)
 INCLUDE_DIRECTORIES(
         /usr/include
         /usr/local/include
-        /root/Work/libtorch/include
-        /root/Work/libtorch/include/torch/csrc/api/include
+        /root/Work/lib/ll/libtorch/include
+        /root/Work/lib/ll/libtorch/include/torch/csrc/api/include
         /usr/local/include/opencv4
         /usr/local/cuda-11.8/include
 		${EXTRA_INC_DIR}/boost/include 
@@ -45,7 +45,7 @@ LINK_DIRECTORIES(
         /usr/lib/x86_64-linux-gnu
         /usr/local/cuda-11.8/lib64
 	/usr/lib/x86_64-linux-gnu/
-        /root/Work/libtorch/lib
+        /root/Work/lib/ll/libtorch/lib
         /usr/local/lib
         ${PROJECT_SOURCE_DIR}/linux/lib
 		${EXTRA_INC_DIR}/boost/lib 
