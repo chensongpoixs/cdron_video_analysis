@@ -1,9 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.33026.149
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34114.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cdron_video_analysis", "cdron_video_analysis\cdron_video_analysis.vcxproj", "{586F4CB7-3027-414F-B89B-ADC62997DB23}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cface_detect", "cface_detect\cface_detect.vcxproj", "{4F820327-470A-4B35-8D60-9C389A826B87}"
+	ProjectSection(ProjectDependencies) = postProject
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA} = {43E05E50-96BD-45EF-B244-F5E8478EEBEA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "clib", "clib\clib.vcxproj", "{43E05E50-96BD-45EF-B244-F5E8478EEBEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +28,22 @@ Global
 		{586F4CB7-3027-414F-B89B-ADC62997DB23}.Release|x64.Build.0 = Release|x64
 		{586F4CB7-3027-414F-B89B-ADC62997DB23}.Release|x86.ActiveCfg = Release|Win32
 		{586F4CB7-3027-414F-B89B-ADC62997DB23}.Release|x86.Build.0 = Release|Win32
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Debug|x64.ActiveCfg = Debug|x64
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Debug|x64.Build.0 = Debug|x64
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Debug|x86.ActiveCfg = Debug|Win32
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Debug|x86.Build.0 = Debug|Win32
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Release|x64.ActiveCfg = Release|x64
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Release|x64.Build.0 = Release|x64
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Release|x86.ActiveCfg = Release|Win32
+		{4F820327-470A-4B35-8D60-9C389A826B87}.Release|x86.Build.0 = Release|Win32
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Debug|x64.ActiveCfg = Debug|x64
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Debug|x64.Build.0 = Debug|x64
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Debug|x86.ActiveCfg = Debug|Win32
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Debug|x86.Build.0 = Debug|Win32
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Release|x64.ActiveCfg = Release|x64
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Release|x64.Build.0 = Release|x64
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Release|x86.ActiveCfg = Release|Win32
+		{43E05E50-96BD-45EF-B244-F5E8478EEBEA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

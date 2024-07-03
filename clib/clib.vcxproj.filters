@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="websocket">
+      <UniqueIdentifier>{7b4ed176-88da-4720-94bc-4b873e884231}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="casync_log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ccmd_param.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cconfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cdigit2str.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="clog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="clog_color.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cmem_pool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cnet_type.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="crandom.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ctime_api.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_msg_queue.cpp">
+      <Filter>websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_msg_reserve.cpp">
+      <Filter>websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_server_mgr.cpp">
+      <Filter>websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_session.cpp">
+      <Filter>websocket</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="casync_log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ccmd_param.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cconfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cdigit2str.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="clog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="clog_color.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="clog_define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cnoncopyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crandom.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="csingleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_api.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_const.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ctime_elapse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cmem_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_msg_queue.h">
+      <Filter>websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_msg_reserve.h">
+      <Filter>websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_server_mgr.h">
+      <Filter>websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_session.h">
+      <Filter>websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="cnet_define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="httplib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -12,6 +12,6 @@ set Dir=%~dp0%para%\
 start "cdron_video_analysis" /D %Dir% %Dir%cdron_video_analysis.exe ..\..\server.cfg  ..\..\log
  
 
-
+REM >face_api.log 2>&1 &
 
 REM pause
