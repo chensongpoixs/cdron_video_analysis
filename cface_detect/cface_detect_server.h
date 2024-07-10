@@ -8,7 +8,8 @@ purpose:		log
 #ifndef _C_FACE_DETECT_SERVER_H_
 #define _C_FACE_DETECT_SERVER_H_
 
-
+#include "clog.h"
+#include "ccfg.h"
 namespace chen {
 
 

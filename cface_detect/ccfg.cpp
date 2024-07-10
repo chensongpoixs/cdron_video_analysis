@@ -42,8 +42,12 @@ namespace chen {
 		// é»˜è®¤å€¼
 		set_uint32(ECI_TimeZone, "time_zone", 8);
 		set_uint32(ECI_TimeAdjust, "time_adjust", 0);
-		
-		 
+		set_uint32(ECI_LogLevel, "log_level", ELogLevel_Num);
+		set_uint32(ECI_MeidaReconnectWait, "media_reconnect_wait", 5);
+		set_string(ECI_WebHttpWanHost, "web_http_wan_ip", "0.0.0.0");
+		set_uint32(ECI_WebHttpWanPort, "web_http_wan_port", 9800);
+		set_string(ECI_WebSocketWanIp, "websocket_wan_ip", "0.0.0.0");
+		set_uint32(ECI_WebSocketWanPort, "websocket_wan_port", 9850);
 		
  
 #if _DEBUG

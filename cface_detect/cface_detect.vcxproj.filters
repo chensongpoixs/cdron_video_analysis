@@ -22,6 +22,18 @@
     <Filter Include="face_detect">
       <UniqueIdentifier>{7ca08050-ded9-401e-b508-db43e925a52d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="web">
+      <UniqueIdentifier>{5912d0b3-5c48-48d4-a5df-4ad77cd0bcce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dispatch">
+      <UniqueIdentifier>{8c31004e-52cb-460d-b3f9-01c7e88efa9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="handler">
+      <UniqueIdentifier>{344ba7b3-bcf8-4446-a67e-2e49132971fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message_base">
+      <UniqueIdentifier>{27712ca7-d8e3-41b8-b3bc-187fd66aa560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +48,48 @@
     <ClCompile Include="cface_detect.cpp">
       <Filter>face_detect</Filter>
     </ClCompile>
+    <ClCompile Include="cvideo_analysis.cpp">
+      <Filter>face_detect</Filter>
+    </ClCompile>
+    <ClCompile Include="facedetectcnn.cpp">
+      <Filter>face_detect</Filter>
+    </ClCompile>
+    <ClCompile Include="facedetectcnn-data.cpp">
+      <Filter>face_detect</Filter>
+    </ClCompile>
+    <ClCompile Include="facedetectcnn-model.cpp">
+      <Filter>face_detect</Filter>
+    </ClCompile>
+    <ClCompile Include="chttp_queue_mgr.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="cproxy.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="cweb_http_api_mgr.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="cweb_http_api_proxy.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="clocation.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="cmessage_handler.cpp">
+      <Filter>web</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_wan_server.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_wan_session.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="cwebsocket_wan_session_handler.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
+    <ClCompile Include="cclient_msg_dispatch.cpp">
+      <Filter>dispatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ccfg.h">
@@ -46,6 +100,75 @@
     </ClInclude>
     <ClInclude Include="cface_detect.h">
       <Filter>face_detect</Filter>
+    </ClInclude>
+    <ClInclude Include="cvideo_analysis.h">
+      <Filter>face_detect</Filter>
+    </ClInclude>
+    <ClInclude Include="facedetectcnn.h">
+      <Filter>face_detect</Filter>
+    </ClInclude>
+    <ClInclude Include="facedetection_export.h">
+      <Filter>face_detect</Filter>
+    </ClInclude>
+    <ClInclude Include="asio_compatibility.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cconstructor_magic.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="chttp_queue_mgr.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cproxy.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cstringize_macros.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_interface.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_mgr.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cweb_http_api_proxy.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="mutex.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="server_http.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="status_code.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.hpp">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="clocation.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cmessage_handler.h">
+      <Filter>web</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_wan_server.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="cwebsocket_wan_session.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="cclient_msg_dispatch.h">
+      <Filter>dispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="cmsg_base_id.h">
+      <Filter>message_base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
